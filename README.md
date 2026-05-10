@@ -1,0 +1,5 @@
+# Hexdown Specification
+
+Version 0.1
+
+Hexdown is a specification for representing and managing a corpus of documents on a computer. The specification combines the document macrostructure of [Hypercard](https://en.wikipedia.org/wiki/Hypercard), the document organization semantics of [Markdown](https://en.wikipedia.org/wiki/Markdown), and a novel encoding scheme where a tree of document nodes is represented by a sequence of 6-bit "sips". The macrostructure of a document is composed of a tree of cards to support efficient traversal of large documents without requiring a full scan of the document content. Individual cards describe a microstructure of root, branch, stem and blossom document nodes. Root nodes describe document metadata, branch nodes describe high-level document organization into units such as chapters or sections, stem nodes set the context that structures the way child blossom nodes will be interpreted, and blossom nodes describe glyphs to be rendered as part of the document.
