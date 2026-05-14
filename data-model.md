@@ -53,14 +53,15 @@ Flushes are globally time-ordered across all gardeners in an orchard. The counte
 A card's back contains:
 
 - the **card-id** (40 + 24 packed)
-- the **trellis ref** the face conforms to (one of the core trellises or an extension trellis)
+- the **trellis ref** the face conforms to (a card-id pointing to the trellis card; or one of the bootstrap trellises by reserved id)
 - the **position path** within the document's arbor (e.g., `book/chapter/section/passage`) — empty for the taproot
 - the **face hash** — content hash of the face sip stream
-- the **child card refs** — ordered list of card-ids that fill the link slots in the face
+- the **arbor-ref** — *taproot cards only*; a card-id pointing to the arbor card governing this document
+- the **child card refs** — ordered list of card-ids that fill the link slots in the face (boughs in branch cards; faces of leaf cards have no link slots)
 
-A card's face is a tree of document nodes (face-root + branch / stem / blossom subtrees) parsed under the card's trellis and encoded as a flat sip stream.
+A card's face is a tree of document nodes encoded as a flat sip stream, parsed under the card's trellis. In a branch card the face is a bough over link petals; in a leaf card the face is stems and blossoms over content petals. See [document-nodes.md](document-nodes.md) for node classes.
 
-The document's *arbor* is not stored on every back. It lives on the taproot's face. Non-taproot cards locate the arbor via their card-id: the taproot is `(card.document_id, 0)`.
+The document's arbor is referenced once per document, from the taproot's back via the arbor-ref slot. Non-taproot cards locate their document's arbor by jumping to the taproot at `(card.document_id, 0)` and reading its arbor-ref. The arbor itself is a hexdown card (a leaf card using the *metarbor* trellis), so arbors are first-class data stored within the orchard.
 
 ## Arbors and trellises
 
