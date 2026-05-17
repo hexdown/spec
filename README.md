@@ -18,7 +18,8 @@ Hexdown takes its document macrostructure from [Hypercard](https://en.wikipedia.
 - [metaschema.md](metaschema.md) — how arbors and AST node trees serialize as sip streams
 - [core-arbors.md](core-arbors.md) — built-in arbors and trellises
 - [deltas.md](deltas.md) — till and flush delta semantics
+- [roadmap.md](roadmap.md) — current status, planned implementations, and the first concrete milestone
 
 ## Status
 
-Early specification development. Many sections contain TBDs and open questions.
+Early specification development. Many sections contain TBDs and open questions. The next concrete milestone is a Python prototype implementation ([hwatu](https://github.com/hexdown/hwatu)) that ingests a small canonical markdown corpus as cards; see [roadmap.md](roadmap.md) for more.
