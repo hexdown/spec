@@ -18,7 +18,7 @@ Each card has two sides:
 - a **face** describing the rendered content of the card as a tree of document nodes, encoded as a flat sequence of 6-bit sips
 - a **back** describing the card's stable id, the trellis it conforms to, the content hash of its face, and references to its child cards
 
-The face is what humans read; the back is what the storage layer uses to find, version, and link cards together.
+The face is what humans read; the back is what the storage layer uses to find, version, and graft cards together.
 
 ## Arbors and trellises
 

@@ -21,10 +21,10 @@ The hexdown core ships several trellises. The two bootstrap trellises (metatrell
 - **metatrellis** — the trellis used by trellis cards.
 - **metarbor** — the trellis used by arbor cards.
 
-**Core branch trellises** (faces are boughs over link petals; no rendered content):
+**Core branch trellises** (faces are boughs over grafts; no rendered content):
 
 - **taproot** — used by every document's entry-point card. See the draft below.
-- **omnibus**, **book**, **chapter**, **section** — the report arbor's internal branch levels. Each is a bough whose link children are either a banner (on its head) and a body of next-level branches or leaves. See "Report arbor (draft)" below.
+- **omnibus**, **book**, **chapter**, **section** — the report arbor's internal branch levels. Each is a bough whose graft children are either a banner (on its head) and a body of next-level branches or leaves. See "Report arbor (draft)" below.
 
 **Core leaf trellises** (faces hold stems, blossoms, and petals):
 
@@ -36,7 +36,7 @@ The hexdown core ships several trellises. The two bootstrap trellises (metatrell
 - **diagram** — vector graphics content. TBD: SVG-like or a hexdown-native vector representation.
 - **photo** — raster image content. TBD: bitmap or 2D splat representation.
 
-TBD — full per-trellis definitions: face-root kind, valid child node kinds at each position, nesting rules, link-slot patterns.
+TBD — full per-trellis definitions: face-root kind, valid child node kinds at each position, nesting rules, graft-slot patterns.
 
 ## Taproot trellis (draft)
 
@@ -44,10 +44,10 @@ Every document has exactly one taproot card, and every taproot card uses the **t
 
 A taproot face is a bough rooted at the `taproot` kind with two sections:
 
-- **head** — 0-64 link petals, each naming a kind of meta card (at, dex, status, etc.). The kind sip at each position determines the meta card's kind; the back's `child-card-refs` resolves each position to a card-id.
-- **body** — exactly one link petal naming the body-root kind (omnibus, book, chapter, section, …, depending on document size). The taproot has *exactly one* body child (inherited from pentabased's tapestry rule).
+- **head** — 0-64 grafts, each naming a kind of meta card (at, dex, status, etc.). The kind sip at each position determines the meta card's kind; the back's `child-card-refs` resolves each position to a card-id.
+- **body** — exactly one graft naming the body-root kind (omnibus, book, chapter, section, …, depending on document size). The taproot has *exactly one* body child (inherited from pentabased's tapestry rule).
 
-The arbor governing the document is *not* a meta card linked from the head. It is a card-id stored in a dedicated **arbor-ref** slot on the taproot's *back* (see [data-model.md](data-model.md)), pointing to an arbor card stored elsewhere in the orchard. This keeps the taproot's face purely a tree of cards-in-this-document, while the arbor-ref is a system reference that lives at the catalog layer.
+The arbor governing the document is *not* a meta card grafted from the head. It is a card-id stored in a dedicated **arbor-ref** slot on the taproot's *back* (see [data-model.md](data-model.md)), pointing to an arbor card stored elsewhere in the orchard. This keeps the taproot's face purely a tree of cards-in-this-document, while the arbor-ref is a system reference that lives at the catalog layer.
 
 The document's *title* is also not on the taproot. The title lives on the body-root branch card (typically a book or section) as that card's own banner. Sub-titles for nested branches (chapters, sections) live on their respective banner attachments. The topmost banner is the document's title.
 
@@ -57,7 +57,7 @@ Conventional meta cards (recommended by arbors but never required by the trellis
 - **dex** — generic key/value system metadata (`created-at`, `updated-at`, etc.)
 - **status** — single-enum lifecycle state for documents that need it
 
-Arbors may recommend additional meta cards. The taproot trellis itself imposes no required meta — only the body link and the arbor-ref are mandatory.
+Arbors may recommend additional meta cards. The taproot trellis itself imposes no required meta — only the body graft and the arbor-ref are mandatory.
 
 TBD — concrete kind-sip assignments for each meta card kind in the taproot's bough.
 
@@ -122,8 +122,8 @@ Documents grow by inserting parent branch levels — when a `taproot → section
 
 Each branch level uses its own branch trellis (omnibus, book, chapter, section). Each branch trellis's bough has:
 
-- **head** — optional banner link (title and optional summary for this branch)
-- **body** — 1-64 child links of the next branch level (or passages for sections)
+- **head** — optional banner graft (title and optional summary for this branch)
+- **body** — 1-64 child grafts of the next branch level (or passages for sections)
 
 The topmost branch's banner is the document's title.
 

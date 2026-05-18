@@ -1,31 +1,41 @@
 # Document Nodes
 
-Hexdown document content is represented as a tree of nodes within each card's face. The tree has four structural levels:
+Hexdown document content is represented as a tree of nodes within each card's face. The node classes are:
 
-- **petal** — single-sip leaf; carries content data (in a blossom) or a link kind (in a bough)
+- **petal** — single-sip leaf inside a blossom; carries rendered content data
+- **graft** — single-sip leaf inside a bough; the site where a child card is joined to its parent. Carries a kind sip naming the child card grafted at that point
 - **blossom** — inner node whose direct children are petals; the smallest named word-scale content unit (appears only in leaf trellises)
 - **stem** — inner node whose direct children are blossoms or other stems; combines word-scale units into larger structures (appears only in leaf trellises)
-- **bough** — top-level inner node of a branch trellis; whose direct children are link petals naming child card kinds (appears only in branch trellises)
+- **bough** — top-level inner node of a branch trellis; whose direct children are grafts naming child card kinds (appears only in branch trellises)
 
-Every leaf of the tree is a single sip — a petal. Every inner node begins with a kind sip that tells the parser what to expect next (the *kind-glyph-implies-form* discipline; see [metaschema.md](metaschema.md)).
+Every leaf of the tree is a single sip — a petal (inside a blossom) or a graft (inside a bough). Every inner node begins with a kind sip that tells the parser what to expect next (the *kind-glyph-implies-form* discipline; see [metaschema.md](metaschema.md)).
 
-The level a card's face inhabits depends on its trellis flavor. **Branch trellises** produce faces rooted in a bough, whose children are link-petals — branch card faces hold no rendered content. **Leaf trellises** produce faces rooted in a stem or blossom over content-petals — leaf cards hold the actual rendered material.
+The class a card's face inhabits depends on its trellis flavor. **Branch trellises** produce faces rooted in a bough, whose children are grafts naming child card kinds — branch card faces hold no rendered content. **Leaf trellises** produce faces rooted in a stem or blossom over petals — leaf cards hold the actual rendered material.
+
+The discipline this expresses: **no bough nodes on leaf cards**. A branch card can graft to a stem (the face root of the leaf card the bough's graft references), but the body of any stem — and the blossoms and petals it contains — lives only on leaf cards.
 
 See [glossary.md](glossary.md) for one-paragraph definitions of the core terms; see [encoding.md](encoding.md) for the sip → glyph mapping used by phonetic petals.
 
 ## Petals
 
-A petal is a single sip in a leaf position. Petals are the only sips that appear at the tree's leaves — every other sip in the stream is structural (kind glyph, count, or null marker).
+A petal is a single sip at a leaf position inside a blossom. Petals carry the rendered content of leaf cards; no petals appear in branch cards.
 
-A petal's *meaning* is determined by its parent:
+A petal's *meaning* is determined by its parent blossom kind:
 
 - inside a **neem** or **prop**: a phoneme
 - inside a **quant**: a digit, mantissa bit-group, exponent bit-group, or precision marker (kind-specific layout)
 - inside an **enum**: an ordinal or range marker
 - inside a **unipoint**: a bit-group of a 32-bit unicode codepoint
-- inside a **bough**: a link kind naming the kind of child card at that position (the back's child-card-refs list resolves position → card-id)
 
 The full sip → phoneme/glyph mapping for phonetic petals lives in [encoding.md](encoding.md).
+
+## Grafts
+
+A graft is a single sip at a leaf position inside a bough — the site where a child card is joined to its parent branch card. Each graft's value is a kind sip naming the kind of the child card grafted at that position. The card's back resolves each graft position to a child card-id via its `child-card-refs` list.
+
+Grafts are the structural counterpart of petals: petals carry rendered content (in leaf cards), grafts carry structural references to child cards (in branch cards). Both are single-sip leaves of the document-node tree, distinguished by which kind of parent they live in.
+
+The plant-grafting metaphor: the bough is the rootstock (the receiving structure), the child card's face root is the scion (the thing joined in), and the graft itself is the join site — the single-sip slot in the bough naming the kind of the card grafted there.
 
 ## Blossoms
 
@@ -52,11 +62,11 @@ Higher-level stems (paragraph, list, quote, note, etc.) and trellis-specific ste
 
 ## Boughs
 
-A bough is the top-level inner node of a branch trellis. Its direct children are link petals — single sips whose values name the kind of child card at each position. The card's back resolves each link position into a card-id via the `child-card-refs` list.
+A bough is the top-level inner node of a branch trellis. Its direct children are grafts — single sips whose values name the kind of child card at each position. The card's back resolves each graft position into a card-id via the `child-card-refs` list.
 
 Boughs appear only in branch trellises (taproot, book, chapter, section, etc.). Their function is to enumerate which child cards exist and what each one is for, while delegating the actual rendered content to those child cards. This is the discipline that keeps branch cards free of rendered content.
 
-The taproot trellis is a specific kind of bough — its link-petal kinds include the meta cards (at, dex, status, ...) plus the single body root (omnibus | book | chapter | section, depending on document size).
+The taproot trellis describes a specific kind of bough — its graft kinds include the meta cards (at, dex, status, ...) plus the single body root (omnibus | book | chapter | section, depending on document size).
 
 ## Face roots and back roots
 

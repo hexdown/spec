@@ -2,7 +2,7 @@
 
 The metaschema describes how hexdown's own structural objects — arbors, trellises, card backs, deltas, and API messages — serialize as sip sequences. It is the schema that defines all other schemas.
 
-The central discipline (inherited from pentabased) is **kind-glyph-implies-form**: every inner node begins with a kind sip whose value determines what follows (counted children, fixed-arity children, link slot, or leaf petals). The kind sip is the schema — no separate tag or length field is needed to parse a node.
+The central discipline (inherited from pentabased) is **kind-glyph-implies-form**: every inner node begins with a kind sip whose value determines what follows (counted children, fixed-arity children, graft slot, or leaf petals). The kind sip is the schema — no separate tag or length field is needed to parse a node.
 
 TBD — concrete metaschema node kinds and their forms.
 
@@ -18,27 +18,28 @@ These rules apply uniformly across all hexdown ASTs (arbors, trellises, card fac
 
 ## Card classes and node classes
 
-Hexdown distinguishes three classes of card by role, and four classes of node by structural position within a face. Each card class uses a particular flavor of trellis, and each flavor of trellis produces faces with a particular node structure.
+Hexdown distinguishes three classes of card by role, and five classes of node by structural position within a face. Each card class uses a particular flavor of trellis, and each flavor of trellis produces faces with a particular node structure.
 
 | Card class | Trellis flavor    | Face structure                            | Holds rendered content? |
 |:-----------|:------------------|:------------------------------------------|:------------------------|
 | taproot    | taproot (branch)  | bough rooted at the taproot kind          | no                      |
-| branch     | branch trellis    | bough with link petals                    | no                      |
-| leaf       | leaf trellis      | stems and blossoms over content petals    | yes                     |
+| branch     | branch trellis    | bough with grafts                         | no                      |
+| leaf       | leaf trellis      | stems and blossoms over petals            | yes                     |
 
-| Node class | Where it appears                | Children are                          |
-|:-----------|:--------------------------------|:--------------------------------------|
-| bough      | the face-root of a branch trellis | link petals (kind sips naming child cards) |
-| stem       | within a leaf trellis            | blossoms or other stems              |
-| blossom    | within a leaf trellis            | content petals                       |
-| petal      | leaf position (always)           | nothing (a single sip)               |
+| Node class | Where it appears                  | Children are                          |
+|:-----------|:----------------------------------|:--------------------------------------|
+| bough      | the face-root of a branch trellis | grafts (kind sips naming child cards) |
+| stem       | within a leaf trellis             | blossoms or other stems               |
+| blossom    | within a leaf trellis             | petals                                |
+| graft      | leaf position inside a bough      | nothing (a single sip)                |
+| petal      | leaf position inside a blossom    | nothing (a single sip)                |
 
-The discipline this expresses: **rendered content lives only in leaf cards.** Branch cards (including the taproot) organize the tree of cards but carry no content of their own; their faces are uniformly boughs over link petals. Leaf cards carry actual content — text, diagrams, photos — under whichever leaf trellis the arbor specifies at their position.
+The discipline this expresses: **rendered content lives only in leaf cards.** Branch cards (including the taproot) organize the tree of cards but carry no content of their own; their faces are uniformly boughs over grafts. Leaf cards carry actual content — text, diagrams, photos — under whichever leaf trellis the arbor specifies at their position.
 
 ## Trellis flavors
 
-- **branch trellis** — produces branch cards. Face structure: a bough rooted at the trellis's specific kind (e.g., `book` bough for a book card under the report arbor). Children are link petals; back resolves each to a child card-id.
-- **leaf trellis** — produces leaf cards. Face structure: a tree of stems and blossoms over content petals, rooted at whatever face-root kind the trellis specifies.
+- **branch trellis** — produces branch cards. Face structure: a bough rooted at the trellis's specific kind (e.g., `book` bough for a book card under the report arbor). Children are grafts; back resolves each to a child card-id.
+- **leaf trellis** — produces leaf cards. Face structure: a tree of stems and blossoms over petals, rooted at whatever face-root kind the trellis specifies.
 
 The **taproot trellis** is a particular branch trellis — every document has one taproot card, and that card uses this trellis.
 
@@ -60,7 +61,7 @@ TBD. Candidate forms (from pentabased):
 - **headed** — kind + head + body-count + body-children. For nodes that have separate metadata and content sections (e.g., a card with a banner and a body).
 - **counted** — kind + count + children. For variable-length nodes (1-64 children).
 - **children(N)** — kind + N children. For fixed-arity nodes.
-- **link** — kind only. Appears in bough positions; consumes one entry in the surrounding card's child-card-refs list.
+- **graft** — kind only. Appears in bough positions; consumes one entry in the surrounding card's child-card-refs list.
 
 ## Methodology
 

@@ -11,7 +11,7 @@ orchard               (one per hexdown installation; the corpus)
 └── plot              (grouped by arbor + intent; gardener permissions attach here)
     └── card          (face + back)
         ├── face: tree of document nodes (sip stream)
-        └── back: id, trellis ref, position path, face hash, child card refs
+        └── back: id, trellis ref, face hash, child card refs
 ```
 
 Documents are not a separate stored layer. A *document* is the closure of (taproot card + descendants reachable through `back.children`); a card is a taproot when its trellis is the core taproot trellis. Listing all taproot-trellis cards in a plot enumerates the plot's documents.
@@ -54,12 +54,11 @@ A card's back contains:
 
 - the **card-id** (40 + 24 packed)
 - the **trellis ref** the face conforms to (a card-id pointing to the trellis card; or one of the bootstrap trellises by reserved id)
-- the **position path** within the document's arbor (e.g., `book/chapter/section/passage`) — empty for the taproot
 - the **face hash** — content hash of the face sip stream
 - the **arbor-ref** — *taproot cards only*; a card-id pointing to the arbor card governing this document
-- the **child card refs** — ordered list of card-ids that fill the link slots in the face (boughs in branch cards; faces of leaf cards have no link slots)
+- the **child card refs** — ordered list of card-ids that fill the graft slots in the face (boughs in branch cards; faces of leaf cards have no graft slots)
 
-A card's face is a tree of document nodes encoded as a flat sip stream, parsed under the card's trellis. In a branch card the face is a bough over link petals; in a leaf card the face is stems and blossoms over content petals. See [document-nodes.md](document-nodes.md) for node classes.
+A card's face is a tree of document nodes encoded as a flat sip stream, parsed under the card's trellis. In a branch card the face is a bough over grafts; in a leaf card the face is stems and blossoms over petals. See [document-nodes.md](document-nodes.md) for node classes.
 
 The document's arbor is referenced once per document, from the taproot's back via the arbor-ref slot. Non-taproot cards locate their document's arbor by jumping to the taproot at `(card.document_id, 0)` and reading its arbor-ref. The arbor itself is a hexdown card (a leaf card using the *metarbor* trellis), so arbors are first-class data stored within the orchard.
 

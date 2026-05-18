@@ -13,7 +13,7 @@ Hexdown content is encoded as a sequence of **sips** — 6-bit values, each one 
 
 The same 64-value space is reused for structural roles (kind glyphs, counts, null markers) — a sip's value is just a number; whether it codes for a phoneme depends on its parse position. The phoneme mapping below describes how sip values are interpreted *as petals* within phonetic blossoms (neem, prop). Other blossom kinds (quant, enum, uniglyph) interpret their petal sips under kind-specific layouts.
 
-All punctuation, formatting, and other markup that would normally be represented by characters in a text format is represented in hexdown by stem and branch nodes in the document tree — never by petals.
+All punctuation, formatting, and other markup that would normally be represented by characters in a text format is represented in hexdown by stem and bough nodes in the document tree — never by petals.
 
 TBD — concrete mapping table assigning each sip value to a numeric value and a rendered phoneme.
 

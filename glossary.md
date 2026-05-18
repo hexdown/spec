@@ -4,17 +4,19 @@ Named concepts in hexdown, in rough dependency order — encoding terms first, t
 
 ## Encoding
 
-**sip** — the basic 6-bit data unit of hexdown encoding, one of 64 possible values. Any 6 bits of a hexdown stream is a sip; sips serve different roles depending on their position in the parse — kind glyph at the start of an inner node, count, petal at a leaf, or null marker. Analogous to a byte: a sip is a generic data unit whose meaning is determined by context.
+**sip** — the basic 6-bit data unit of hexdown encoding, one of 64 possible values. Any 6 bits of a hexdown stream is a sip; sips serve different roles depending on their position in the parse — kind glyph at the start of an inner node, count, petal or graft at a leaf, or null marker. Analogous to a byte: a sip is a generic data unit whose meaning is determined by context.
 
-**petal** — a sip in its role as a leaf value. The petal's interpretation depends on its parent — in a *blossom* it carries content (a character glyph, a digit, a unipoint bit-group); in a *bough* it carries a link kind naming the kind of child card at that position. Petals are the only sips that appear at leaf positions of the document tree.
+**petal** — a sip at a leaf position inside a blossom. Carries rendered content data; its interpretation depends on its parent blossom kind — in a *neem* or *prop* it carries a phoneme; in a *quant* it carries a digit, mantissa, exponent, or precision marker; in an *enum* it carries an ordinal or range marker; in a *unipoint* it carries a bit-group of a unicode codepoint. Petals appear only in leaf trellises.
+
+**graft** — a sip at a leaf position inside a bough; the site where a child card is joined to its parent branch card. Carries a kind sip naming the kind of child card grafted at that position; the card's back resolves each graft position to a child card-id via its child-card-refs list. Grafts are the structural counterpart of petals (petals carry rendered content in leaf cards; grafts carry structural references in branch cards), and appear only in branch trellises.
 
 **beat** — the null sip (value 0x00, rendered as `-`). Marks an intentionally-absent position in a fixed-arity parent, acts as a separator within a blossom, and serves as collision-resolution padding at the start of a content-addressed sip sequence. Inherited from pentabased.
 
 ## Document nodes
 
-The four node classes form a top-down hierarchy: bough (in branch cards), stem and blossom (in leaf cards), petal (the leaves of either). See [document-nodes.md](document-nodes.md) for the kinds within each class.
+The node classes form a top-down hierarchy: bough (in branch cards), stem and blossom (in leaf cards), and the leaf forms — petal (inside blossoms) and graft (inside boughs). See [document-nodes.md](document-nodes.md) for the kinds within each class.
 
-**bough** — the top-level inner node of a branch trellis. Its direct children are link petals — single sips whose values are kind glyphs naming the kind of child card at each position. The card's back resolves each link position to a child card-id. Boughs hold no rendered content directly; all content lives in leaf cards.
+**bough** — the top-level inner node of a branch trellis. Its direct children are grafts — single sips whose values are kind glyphs naming the kind of child card at each position. The card's back resolves each graft position to a child card-id. Boughs hold no rendered content directly; all content lives in leaf cards.
 
 **stem** — an inner document node found in leaf trellises that combines blossoms or other stems into larger structures. Examples: a *span* combines blossoms into a compound word; a *phrase* combines blossoms and spans into a thought; a *statement* combines phrases into a sentence with first-letter capitalization and a period. Stems carry rendering and contextual information that in markdown is conveyed by surrounding characters (punctuation, formatting cues, capitalization rules).
 
@@ -30,7 +32,7 @@ The four node classes form a top-down hierarchy: bough (in branch cards), stem a
 
 **arbor** — a document-level schema defining the valid macrostructure of one kind of document. An arbor is itself a hexdown card (a leaf card using the *metarbor* trellis), so arbors are first-class extensions stored in the orchard rather than out-of-band definitions. The hexdown core ships several built-in arbors (report, graph, table) as built-in cards; custom arbors can be defined the same way.
 
-**trellis** — a microstructure schema defining the valid document-node tree within a single card's face. A trellis is itself a hexdown card (a leaf card using the *metatrellis* trellis). Trellises come in two flavors: a **branch trellis** describes faces composed of a bough with link children (no rendered content); a **leaf trellis** describes faces composed of stems and blossoms over petals (rendered content).
+**trellis** — a microstructure schema defining the valid document-node tree within a single card's face. A trellis is itself a hexdown card (a leaf card using the *metatrellis* trellis). Trellises come in two flavors: a **branch trellis** describes faces composed of a bough with graft children (no rendered content); a **leaf trellis** describes faces composed of stems and blossoms over petals (rendered content).
 
 **metatrellis** — the bootstrap trellis used by trellis cards. One of two built-in trellises whose grammar is hardcoded into hexdown parsers (the other is *metarbor*). Trellis cards conform to the metatrellis, which describes the AST grammar for any trellis.
 
@@ -42,9 +44,9 @@ The four node classes form a top-down hierarchy: bough (in branch cards), stem a
 
 **card** — a single node in a document tree, composed of a face and a back. Cards have stable ids; faces are content-addressed by hash, so unchanged content is shared rather than duplicated. Cards come in three classes by role: **taproot cards** are document anchors (one per document); **branch cards** organize the document tree without holding rendered content; **leaf cards** hold actual content. A card's class is determined by which trellis it uses (taproot trellis, a branch trellis, or a leaf trellis).
 
-**face** — the content side of a card. A tree of nodes encoded as a flat sequence of sips, parsed under the card's trellis. In a branch card the face is a bough over link-petals; in a leaf card the face is stems over blossoms over content-petals. Faces are content-addressed by hash.
+**face** — the content side of a card. A tree of nodes encoded as a flat sequence of sips, parsed under the card's trellis. In a branch card the face is a bough over grafts; in a leaf card the face is stems over blossoms over petals. Faces are content-addressed by hash.
 
-**back** — the catalog side of a card. Holds the card's stable id, the trellis it conforms to, the position path within its document's arbor, the content hash of its face, the **arbor-ref** (taproot cards only; a card-id pointing to the document's arbor card), and ordered references to its child cards.
+**back** — the catalog side of a card. Holds the card's stable id, the trellis it conforms to, the content hash of its face, the **arbor-ref** (taproot cards only; a card-id pointing to the document's arbor card), and ordered references to its child cards.
 
 **sheaf** — a query result set. A collection of cards returned by a forage operation, possibly with associated relevance scores or position context.
 
