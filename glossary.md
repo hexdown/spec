@@ -6,15 +6,23 @@ Named concepts in hexdown, in rough dependency order — encoding terms first, t
 
 **sip** — the basic 6-bit data unit of hexdown encoding, one of 64 possible values. Any 6 bits of a hexdown stream is a sip; sips serve different roles depending on their position in the parse — kind glyph at the start of an inner node, count, petal or graft at a leaf, or null marker. Analogous to a byte: a sip is a generic data unit whose meaning is determined by context.
 
-**petal** — a sip at a leaf position inside a blossom. Carries rendered content data; its interpretation depends on its parent blossom kind — in a *neem* or *prop* it carries a phoneme; in a *quant* it carries a digit, mantissa, exponent, or precision marker; in an *enum* it carries an ordinal or range marker; in a *unipoint* it carries a bit-group of a unicode codepoint. Petals appear only in leaf trellises.
+**petal** — a sip at a leaf position inside a blossom-family node; every leaf of a face is a petal. Its interpretation depends on its parent's kind — in a *neem* or *prop* a phoneme; in a *quant* a digit, mantissa, exponent, or precision marker; in an *enum* an ordinal or range marker; in a *unipoint* a bit-group of a unicode codepoint; in a *graft* the kind of a grafted child card; in a *bloom* six bits of a content hash. Content petals appear only in leaf trellises.
 
-**graft** — a sip at a leaf position inside a bough; the site where a child card is joined to its parent branch card. Carries a kind sip naming the kind of child card grafted at that position; the card's back resolves each graft position to a child card-id via its child-card-refs list. Grafts are the structural counterpart of petals (petals carry rendered content in leaf cards; grafts carry structural references in branch cards), and appear only in branch trellises.
+**graft** — a blossom-family node inside a bough; the site where a child card is joined to its parent branch card. Holds exactly one petal naming the kind of child card grafted at that position; the card's back resolves each graft, in face order, to a child card-id via its child-card-refs list. Grafts are the structural counterpart of content blossoms (blossoms bottom out leaf faces with rendered petals; grafts bottom out branch faces with reference petals), and appear only in branch trellises.
 
-**beat** — the null sip (value 0x00, rendered as `-`). Marks an intentionally-absent position in a fixed-arity parent, acts as a separator within a blossom, and serves as collision-resolution padding at the start of a content-addressed sip sequence. Inherited from pentabased.
+**beat** — the null sip (value 0x00, rendered as `-`). The pad node's kind, the petal of intentional absence (a bloom of 64 beats is the null hash), and collision-resolution padding at the start of a content-addressed sip sequence.
+
+**pad** — a single-sip node whose kind is the beat value. Pads appear only before and after a face's schema node — leading pads are the collision-resolution arena for the face hash, trailing pads are slack; parsers skip both.
+
+**bloom** — the reserved blossom kind (`b111111`) whose petals carry a content hash: a full bloom's 64 petals encode a 384-bit hash, and a bloom of 64 beats is the null hash by which a schema card marks itself. Blooms are a species of blossom.
+
+**neem** — the reserved blossom kind (`b111101`) whose petals are phonemes: the universal phonetic word. Prose words and metaschema names are the same kind — schemas and kinds name themselves with neems. (The metastructure sketch's *symbol* merged into neem, 2026-07-18.)
+
+**schema node** — the reserved stem kind (`b000001`) that opens every face, with exactly two children: a bloom carrying the content hash of the card's governing schema (the null hash for schema cards), and the face's card root.
 
 ## Document nodes
 
-The node classes form a top-down hierarchy: bough (in branch cards), stem and blossom (in leaf cards), and the leaf forms — petal (inside blossoms) and graft (inside boughs). See [document-nodes.md](document-nodes.md) for the kinds within each class.
+The node classes form a top-down hierarchy: bough (in branch cards), stem and blossom (in leaf cards), graft (inside boughs), and petal (the sole leaf form, inside blossom-family nodes). Structurally every kind belongs to one of two families by its high bit: stem-family kinds hold nodes, blossom-family kinds hold petals. See [data-model.md](data-model.md) for the classes and [flora.md](flora.md) for the kinds within each class.
 
 **bough** — the top-level inner node of a branch trellis. Its direct children are grafts — single sips whose values are kind glyphs naming the kind of child card at each position. The card's back resolves each graft position to a child card-id. Boughs hold no rendered content directly; all content lives in leaf cards.
 
@@ -22,7 +30,7 @@ The node classes form a top-down hierarchy: bough (in branch cards), stem and bl
 
 **blossom** — an inner document node whose direct children are petals; the smallest named word-scale unit in a document tree. Different blossom kinds (neem, prop, quant, enum, uniglyph) interpret their petal sequences differently. Blossoms only appear in leaf trellises.
 
-**root** — the entry node of a sip-encoded tree. A card has two such trees and so two roots: the **face-root** is the entry node of the face's document-node tree (a bough in a branch card, a stem or blossom in a leaf card), and the **back-root** is the entry node of the back's metaschema record. "Root" alone is context-dependent; the unrelated *taproot* concept refers to a card playing the entry-point role for a whole document.
+**root** — the entry node of a sip-encoded tree. The **card root** is the content entry node of a card's face — the second child of its schema node (a bough in a branch card, a stem or blossom in a leaf card). The **document root** is specifically the card root of the document's taproot card. The **back-root** is the entry node of the back's metaschema record. "Root" alone is context-dependent; the distinct *taproot* concept refers to a card playing the entry-point role for a whole document.
 
 ## Data model
 
@@ -30,7 +38,7 @@ The node classes form a top-down hierarchy: bough (in branch cards), stem and bl
 
 **plot** — a collection of documents within an orchard, grouped by intent and by the arbor they conform to. For example, a "Direct Messages" plot containing posts, or a "Cases" plot containing case study reports. Plots are the unit gardener permissions attach to.
 
-**arbor** — a document-level schema defining the valid macrostructure of one kind of document. An arbor is itself a hexdown card (a leaf card using the *metarbor* trellis), so arbors are first-class extensions stored in the orchard rather than out-of-band definitions. The hexdown core ships several built-in arbors (report, graph, table) as built-in cards; custom arbors can be defined the same way.
+**arbor** — a document-level schema defining the valid macrostructure of one kind of document. An arbor is itself a hexdown card (a leaf card using the *metarbor* trellis), so arbors are first-class extensions stored in the orchard rather than out-of-band definitions. The hexdown core ships several built-in arbors (prose, graph, table) as built-in cards; custom arbors can be defined the same way.
 
 **trellis** — a microstructure schema defining the valid document-node tree within a single card's face. A trellis is itself a hexdown card (a leaf card using the *metatrellis* trellis). Trellises come in two flavors: a **branch trellis** describes faces composed of a bough with graft children (no rendered content); a **leaf trellis** describes faces composed of stems and blossoms over petals (rendered content).
 

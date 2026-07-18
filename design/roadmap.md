@@ -14,13 +14,24 @@ The spec covers:
 
 Sections still carrying significant TBDs:
 
-- the concrete sip-glyph mapping ([encoding.md](encoding.md))
-- the concrete metaschema record encoding for arbors, trellises, backs, and deltas ([metaschema.md](metaschema.md))
-- the full trellis and arbor definitions for the core arbors ([core-arbors.md](core-arbors.md))
-- the delta tree structure and merge semantics ([deltas.md](deltas.md))
-- the permission and gardener model ([vision.md](vision.md))
+- the concrete sip-glyph mapping ([encoding.md](../encoding.md))
+- the concrete metaschema record encoding for arbors, trellises, backs, and deltas ([encoding.md](../encoding.md))
+- the full trellis and arbor definitions for the core arbors ([schemas.md](../schemas.md))
+- the delta tree structure and merge semantics ([deltas.md](../deltas.md))
+- the permission and gardener model ([vision.md](../vision.md))
 
 These TBDs are not deferred by accident — they are deferred because we want to resolve them by working through an implementation rather than designing them in the abstract.
+
+## Current path (2026-07-18)
+
+The near-term sequence, each step validating the one before:
+
+1. **speech-stem rulings** — settle turn / quoth / softening / granularity / broken / cut against the worked trees in [speech-examples.md](speech-examples.md)
+2. **chapter-4 hand-annotation** — annotate the full chapter into the agreed stems; validates the speech design, measures real sips-per-paragraph for the card-scale decision, and tests which kinds want to be card roots
+3. **hand-encode the passage schema card** — the first real schema card under the draft metaschema; validates kind nodes, the neem-list children encoding, and the flat name index against reality
+4. **hwatu phase 1** — begins with real fixtures: an annotated chapter and an encoded schema card as golden tests
+
+At the end of the chain, every open metaschema question has been answered by the corpus rather than by abstract design.
 
 ## Implementations
 

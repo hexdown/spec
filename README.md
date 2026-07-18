@@ -10,16 +10,21 @@ Hexdown takes its document macrostructure from [Hypercard](https://en.wikipedia.
 
 ## Reading this spec
 
+Files and sections are named for ideas a reader already carries, so the spec can be navigated before it is absorbed. The story, in reading order:
+
 - [vision.md](vision.md) — broader goals and commitments
-- [glossary.md](glossary.md) — every named concept, one paragraph each
-- [data-model.md](data-model.md) — orchards, plots, arbors, documents, cards
-- [encoding.md](encoding.md) — 6-bit sip glyphs and the base mapping
-- [document-nodes.md](document-nodes.md) — blossom and stem kinds within a card's face
-- [metaschema.md](metaschema.md) — how arbors and AST node trees serialize as sip streams
-- [core-arbors.md](core-arbors.md) — built-in arbors and trellises
+- [data-model.md](data-model.md) — orchards, plots, cards, faces and backs; node classes; card scale
+- [schemas.md](schemas.md) — the shipped arbors and trellises
+- [encoding.md](encoding.md) — sips, glyphs, metaschema rules, bootstrap grammars, on-disk notes
 - [deltas.md](deltas.md) — till and flush delta semantics
-- [roadmap.md](roadmap.md) — current status, planned implementations, and the first concrete milestone
+
+The reference shelf — consult rather than read straight through:
+
+- [glossary.md](glossary.md) — every named concept, one paragraph each
+- [flora.md](flora.md) — the field guide to blossom and stem kinds
+
+Working state lives in [design/](design/): [roadmap.md](design/roadmap.md) (status and milestones), [corpus-demands.md](design/corpus-demands.md) (what the corpus asks of the trellises), and session documents such as [speech-examples.md](design/speech-examples.md). Design docs die by being absorbed into the spec proper.
 
 ## Status
 
-Early specification development. Many sections contain TBDs and open questions. The next concrete milestone is a Python prototype implementation ([hwatu](https://github.com/hexdown/hwatu)) that ingests a small canonical markdown corpus as cards; see [roadmap.md](roadmap.md) for more.
+Early specification development. Many sections contain TBDs and open questions. The next concrete milestone is a Python prototype implementation ([hwatu](https://github.com/hexdown/hwatu)) that ingests a small canonical markdown corpus as cards; see [design/roadmap.md](design/roadmap.md) for more.
