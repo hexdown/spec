@@ -6,7 +6,7 @@ worked examples applying the speech stems to real sentences from chapter 4 of th
 
 - lowercase word = a **neem** (petals spelled only where interesting)
 - `^word` = a **prop** — marked even where position would capitalize anyway (`^i`, sentence-initial names): prop-ness is semantic, not positional
-- `span(word word)` = a **span** (renders its blossom children hyphen-joined)
+- `word-word` = a single blossom with a **beat** petal at the join (homogeneous compound); `span(...)` appears only for kind-mixing compounds (`span(^mt rainier)`)
 - `'` in a word = **elide** petal; `*` = **possess** petal
 - indentation = tree structure; `←` = commentary
 
@@ -23,7 +23,8 @@ worked examples applying the speech stems to real sentences from chapter 4 of th
 | **broken** ★ | stem | phrases, pivots, embedded quoths | capitalized, terminal `—` (interrupted) | — |
 | phrase | stem | blossoms, spans | trailing `,` if not last in parent | — |
 | **pivot** ★ | stem | blossoms, spans | trailing `—` instead of `,` | — |
-| span | stem | neems, props | children joined by `-` | — |
+| span | stem | mixed-kind blossoms | children joined by `-` | — |
+| **fade** ★ | stem | sentence kinds, phrases | suppressed initial capital: the quieter repeat (provisional; mechanism settles in the ch2 prosody session) | — |
 | neem / prop | blossom | petals | word (prop capitalized everywhere) | — |
 
 ★ = new. earlier drafts had `speech` and `carry` kinds; both were deleted by the embedded-quoth model (2026-07-18) — quoted runs are derivable, and a "resumed" sentence is just a sentence continuing past its embedded quoth. sentence kinds appear both as paragraph children (narration) and as turn children (dialogue); quoths appear at both sentence and phrase level — the interchangeability meta-pattern, twice.
@@ -72,12 +73,12 @@ render walk:
 paragraph
   turn
     exclamation
-      phrase: span(caw caw)
+      phrase: caw-caw
   statement                      ← NOT in a turn: free-standing narration, capitalized, owns its period
     phrase: ^feather ^flop cleared his throat
   turn
     exclamation
-      phrase: span(caw caw)
+      phrase: caw-caw
 ```
 
 the quoth/narration distinction is now pure containment: attributions live *inside* turns; narration stands *beside* them as paragraph children. this is the case that made turn earn its place.

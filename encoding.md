@@ -20,7 +20,7 @@ All punctuation, formatting, and other markup that would normally be represented
 
 Beat, elide, and possess are the glyph values that are neither letters nor digits — the punctuation that survives inside words:
 
-- **beat** (`-`) — the null sip. The pad node's kind, the hash-arena padding value, and the null petal (a bloom of 64 beats is the null hash); renders as `-` wherever a beat petal renders. (The hyphen in spans like `to-day` is the span's render rule, not a stored beat.)
+- **beat** (`-`) — the null sip. The pad node's kind, the hash-arena padding value, the null petal (a bloom of 64 beats is the null hash), and the compound join: a homogeneous compound (`to-day`, `caw-caw`) is a single blossom with beat petals at its joins. Spans — which compose blossoms of *different* kinds (`Mt-Rainier`) — render their own hyphens.
 - **elide** (`'`) — marks elision within a word: `haven't`, `goin'`, `fo'c's'le`. Elision is the apostrophe's original job — *apostrophos*, "turning away," the Greek name for the mark of omission — and hexdown returns the glyph to it.
 - **possess** (`*`) — marks the genitive clitic: `feather flop*s argument`; word-final for plural genitives, which elide nothing (`toads*`). English's possessive apostrophe arose in part as a printers' elision of the old genitive *-es*; hexdown files possession under its own mark rather than overloading the elision glyph.
 

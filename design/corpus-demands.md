@@ -11,7 +11,7 @@ four chapters + front matter converted and close-read (2026-07-18). suggested in
 ### chapter 4 — the minimum viable chapter
 
 - [x] paragraph / statement / question / exclamation / phrase stems — already in the passage-trellis draft
-- [x] neem + prop blossoms; span for hyphenated compounds ("eaves-dropping", "good-bye") — in draft
+- [x] neem + prop blossoms — in draft; **compounds settled 2026-07-18**: homogeneous compounds ("eaves-dropping", "good-bye", "caw-caw") are single blossoms with beat petals at the joins; span is reserved for kind-mixing compounds ("Jack-in-the-Pulpit", "Mt-Rainier")
 - [x] **dialogue is structural** (2026-07-18) — spoken utterance is carried by a turn stem with quoth attributions (embedded at phrase level or standing at sentence level), distinct from lifting from a source; quote marks and dialogue punctuation are render output derived from structure
 - [x] **elision and possession are distinguished in the schema** (2026-07-18) — separate glyphs; see discussion notes below
 - [ ] interruption dash — "your silly—I mean your brother's, plan"
@@ -20,10 +20,11 @@ four chapters + front matter converted and close-read (2026-07-18). suggested in
 
 ### chapter 2 — adds prosody
 
-- [x] **emphasis kinds** (2026-07-18) — a small closed set of non-numeric levels, starting with `stress` (renders italic) and `shout` (renders caps); canonical test is the escalation triple, chapter 2: "Feather Flop!" / "_Feather Flop!_" / "FEATHER FLOP!"
+- [x] **emphasis kinds** (2026-07-18) — a small closed set of non-numeric levels: `stress` (renders italic), `shout` (renders caps), and `fade` (added from ch4's diminuendo echo — renders with suppressed initial capital; the quieter repeat). the volume dial runs fade < plain < stress < shout, and the corpus supplied both ends: canonical tests are ch2's escalation triple ("Feather Flop!" / "_Feather Flop!_" / "FEATHER FLOP!") and ch4's "Good-bye! good-bye!"
 - [ ] verse + line stems — feather flop's quatrain; line breaks distinct from paragraph breaks
 - [ ] aside stem — parenthetical stage direction: "(counting them off)"
-- [ ] colon-introduced speech — "and called again and again as loudly as she dared:" followed by displayed shouts, each its own paragraph
+- [ ] colon-introduced turns — "and called again and again as loudly as she dared:" followed by displayed shouts, each its own paragraph
+- [x] diminuendo echo → **fade** (2026-07-18) — joined the emphasis set as its quiet end; ch4-annotation card 21 uses it provisionally and the source now round-trips verbatim; structural mechanism (wrapper vs variant) settles with stress/shout in the ch2 prosody session
 
 ### chapter 47 — adds embedded lectures
 
@@ -62,6 +63,8 @@ four chapters + front matter converted and close-read (2026-07-18). suggested in
 - [ ] figure / photo trellises — 167 vendored illustrations awaiting a captioned conversion pass
 - [ ] dialogue vs citation as card reference — a mature lift stem cites *another card* (mark + offset + breadth); spoken dialogue (turn/quoth) and citation (lift) may converge on shared machinery
 - [ ] onomatopoeia — "caw-caw!", "cluck! caw!" — plain neems unless evidence demands more
+- [ ] derive chapter numbers from graft position when the full book assembles — stored banner numbering may dissolve into structure (ch4-annotation banner note)
+- [ ] period-style renderer — opener small-caps, drop caps, diminuendo echoes as renderer policy over the same stored trees; print conventions are renderer choices, never schema
 - [ ] tree discipline at the card layer — faces are trees by construction (composition cannot cycle); cycles among card refs forbidden always, checked at flush time; within one document, start strict-tree and admit repeated grafts of the same card only if a real use case demands (orchard-wide sharing of cards across documents is already a deliberate DAG)
 - [ ] phrase-for-word interchangeability — recursion is opt-in per trellis rule (each stem kind lists which children it admits); wanted for the phrasal genitive
 
