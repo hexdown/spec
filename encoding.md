@@ -26,7 +26,29 @@ Beat, elide, and possess are the glyph values that are neither letters nor digit
 
 Markdown-facing renders emit `’` for both elide and possess; the structural distinction is preserved for orthographies (such as pentabased's) that render them differently. (Decided 2026-07-18; corpus evidence in [design/corpus-demands.md](design/corpus-demands.md).)
 
-TBD — concrete mapping table assigning each sip value to a numeric value and a rendered phoneme.
+### The glyph table (proposed 2026-07-19)
+
+The high bit splits the glyph space as it splits the kind space — a **word half** and a **value half**:
+
+Every value has a display glyph (so any stream renders); only some values carry petal *meanings* so far — the reserves keep their glyphs while awaiting purposes:
+
+| values | glyph | meaning |
+|:--------|:------|:------|
+| `0` | `-` | **beat** — the null sip, structurally forced (pads, null hash, collision arena) |
+| `1-26` | `a-z` | letters: alphabet position is the value, a=1 … z=26 |
+| `27` | `'` | **elide** |
+| `28` | `*` | **possess** |
+| `29-31` | `_ ( )` | word-half reserve (display glyphs only) |
+| `32` | `^` | **the first blossom seat** (`b100000`): by convention a schema declares prop first among its blossoms, so prop wears the caret — the annotation notation made real |
+| `33-42` | `0-9` | digits: digit *d* sits at 33+*d* — low five bits minus one |
+| `43-60` | `, ; : ! ? = ~ / \ \| < > [ ] { } @ %` | value-half reserve (display glyphs only) |
+| `61` | `.` | **neem** — the quietest mark for the most frequent kind sip: a dot opens every word |
+| `62` | `+` | **graft** — the join site, drawn as a junction |
+| `63` | `#` | **bloom** — the hash glyph is the hash node |
+
+Properties: neem petals live entirely in the word half (one bit-test validates a phonetic blossom); digits self-code as low-five-bits-minus-one; raw neem streams sort alphabetically by value, so name indexes can binary-search sip streams without decoding. Emergent readability of the visible form: a word renders as a dot, a count letter, then nearly itself (`caw-caw` → `.fcaw-caw`); a full bloom opens `##`; every schema card opens with the greppable signature `--ab##…`.
+
+Known confusables, honestly: `l`/`1` and `o`/`0` survive (the full alphabet and digits are both needed); position disambiguates in parsing, and inspectors can distinguish them typographically. Structural kind sips of *contextual* kinds necessarily share glyphs with letters and digits (a stem kind at value 3 displays `c`) — the visible form is skimmable, not self-describing; the parser is twenty lines away whenever truth is needed.
 
 ## Metastructure
 
@@ -36,7 +58,7 @@ TBD — concrete mapping table assigning each sip value to a numeric value and a
 
 - A face is: zero or more leading pads, one **schema node**, zero or more trailing pads. The entire document tree hangs beneath the schema node.
 - Every node begins with a **kind sip**.
-- A **pad** (kind `b000000`) is a single-sip node with no count and no children. Pads appear only before and after the schema node — leading pads are the collision-resolution arena for the content-addressed face hash, trailing pads are slack; parsers skip both.
+- A **pad** (kind `b000000`) is a single-sip node with no count and no children. Before and after the schema node, pads are the collision-resolution arena for the content-addressed face hash and trailing slack; parsers skip both. In a child position, a pad is an intentionally empty slot — an absent field in a fixed layout, or a skipped value in a positional kind-declaration list (2026-07-19).
 - Every other node's second sip is a **count**: values 0-63 encode 1-64 children. There is exactly one node form.
 - The kind sip's high bit partitions all kinds into two families:
   - **stem family** (`b0xxxxx`) — children are nodes, parsed recursively
@@ -121,7 +143,7 @@ The choice does not affect the semantics described elsewhere in this spec; it af
 - Whether to mandate a leading magic number or version sip in stored sequences
 - How leading beat sips for collision-resolution padding interact with packed byte boundaries (an implementation concern, but worth a spec-level note on what parsers must tolerate)
 - Whether the spec should *recommend* a canonical bit-packed layout while leaving implementations free to choose
-- How intentional absence is marked in fixed-position layouts (a pad node in the child slot? a beat petal? purely positional schemas that never need placeholders?) — card backs and the arbor-ref will force this
+- ~~How intentional absence is marked~~ resolved 2026-07-19: a pad node in the child slot (see the pad rule above); beat petals remain the within-blossom absence (the null hash)
 - The kind node's child representations: the name of the one-petal kind-value blossom, and how the acceptable-children set encodes names and positions — to be validated by hand-encoding a real schema card (the passage schema is the natural candidate)
 - The shape of the schema space (sketch recorded 2026-07-18, to loop back on): likely a taproot per arbor or trellis schema — arbors referring to their valid trellis children, trellises to their valid node kinds, and each named node kind holding a card in a flat schema-node space. Open within the sketch: whether trellis and arbor cards are themselves *named* or only indexed by content hash; and whether [flora.md](flora.md) doubles as the human-facing index of the flat kind-name space
 - Whether the metatrellis / metarbor pair unifies into the single schema-card grammar above, or trellis cards and arbor cards keep distinct hardcoded grammars

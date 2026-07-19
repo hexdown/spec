@@ -22,16 +22,16 @@ Sections still carrying significant TBDs:
 
 These TBDs are not deferred by accident — they are deferred because we want to resolve them by working through an implementation rather than designing them in the abstract.
 
-## Current path (2026-07-18)
+## Current path (updated 2026-07-19)
 
-The near-term sequence, each step validating the one before:
+Completed, each step validating the one before: speech-stem rulings ([speech-examples.md](speech-examples.md)) → chapter-4 hand-annotation ([ch4-annotation.md](ch4-annotation.md)) → the passage schema and full mary frances schema set ([passage-schema.md](passage-schema.md), [mary-frances-schemas.md](mary-frances-schemas.md)) → the glyph table → the hand-spelled golden card ([card3-golden.md](card3-golden.md)).
 
-1. **speech-stem rulings** — settle turn / quoth / softening / granularity / broken / cut against the worked trees in [speech-examples.md](speech-examples.md)
-2. **chapter-4 hand-annotation** — annotate the full chapter into the agreed stems; validates the speech design, measures real sips-per-paragraph for the card-scale decision, and tests which kinds want to be card roots
-3. **hand-encode the passage schema card** — the first real schema card under the draft metaschema; validates kind nodes, the neem-list children encoding, and the flat name index against reality
-4. **hwatu phase 1** — begins with real fixtures: an annotated chapter and an encoded schema card as golden tests
+Remaining stones:
 
-At the end of the chain, every open metaschema question has been answered by the corpus rather than by abstract design.
+1. **the absorption sweep** — the arbor dissolution and metaschema decisions ripple from design/ into the spec proper (schemas.md, glossary, data-model's arbor-ref, encoding's open questions)
+2. **hwatu phase 1** — begins with real fixtures: an annotated chapter, six schemas, a glyph table, and a golden card the encoder must reproduce
+
+Every open metaschema question was answered by the corpus rather than by abstract design.
 
 ## Implementations
 
