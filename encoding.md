@@ -114,13 +114,19 @@ That is the complete structural layer. Everything else — statements, turns, qu
 
 The metaschema is the grammar of schema cards — the schema that defines all other schemas. Its own grammar is hardcoded into every hexdown parser, and a schema card marks itself by giving the null hash in its schema node. Parsers may verify stored schema cards against their hardcoded grammar at load time: schemas are stored as cards, but the parser also knows them by heart. This is what makes orchards self-contained — the schemas needed to interpret an orchard's contents are themselves cards within it.
 
-Draft grammar of a schema card's face, conformed to the metastructure:
+The schema-card grammar, settled by the hand-encoded passage schema (2026-07-19; [design/passage-schema.md](design/passage-schema.md)):
 
-- a schema card's card root is a stem-family node with 1-64 children: the **first** is a neem naming the schema, and the **rest** are kind nodes
-- a **kind node** (proposed `b000010`; the sketch's `b100000` collided with the blossom family) defines one node kind, with three children:
-  1. a one-petal blossom carrying the kind value being defined — graft's structural twin, but consuming no child-card ref (its own kind name is open)
-  2. a neem naming the kind in a flat index of kind names
-  3. the set of acceptable children and the positions they are acceptable in — leaning: a list of neems naming kinds, resolved against the schema's flat name index (representation open; to be validated by hand-encoding a real schema card)
+| value | kind | family | children |
+|:--|:--|:--|:--|
+| `b000010` | trellis | stem | name-neem, crowns, kind* — the sole root kind of schema cards |
+| `b000011` | — | | unassigned (the arbor root dissolved: an arbor is a taproot's trellis) |
+| `b000100` | kind | stem | name-neem, spec |
+| `b100000` | kids | blossom | value petals: the acceptable child kinds |
+| `b100001` | crowns | blossom | value petals: the card-root-eligible kinds |
+| `b100010` | layout | blossom | one petal: a blossom kind's petal interpretation |
+
+- **kind values are schema-wide and positional**: the nth stem kind declared takes the nth free stem value, blossom kinds count up from `b100000`, reserved kinds keep their fixed values — a kind node never stores its own value. A pad in a declaration slot skips a value, letting schemas pin kinds at chosen seats.
+- a **kind node** has two children — its name and its spec — and the spec shape determines everything: **kids** ⇒ a stem kind (children are nodes of the listed kinds), **layout** ⇒ a blossom kind (petals interpreted under the named layout), **bloom** ⇒ a position kind (cards grafted there parse under the schema with this hash).
 
 Dynamic loading: when a parser opens a card, it reads the face's schema node, resolves the bloom's hash to a schema card, parses that card under the metaschema (or under its own declared schema, recursively, bottoming out at the null hash), and then interprets the face under it.
 
@@ -144,8 +150,10 @@ The choice does not affect the semantics described elsewhere in this spec; it af
 - How leading beat sips for collision-resolution padding interact with packed byte boundaries (an implementation concern, but worth a spec-level note on what parsers must tolerate)
 - Whether the spec should *recommend* a canonical bit-packed layout while leaving implementations free to choose
 - ~~How intentional absence is marked~~ resolved 2026-07-19: a pad node in the child slot (see the pad rule above); beat petals remain the within-blossom absence (the null hash)
-- The kind node's child representations: the name of the one-petal kind-value blossom, and how the acceptable-children set encodes names and positions — to be validated by hand-encoding a real schema card (the passage schema is the natural candidate)
-- The shape of the schema space (sketch recorded 2026-07-18, to loop back on): likely a taproot per arbor or trellis schema — arbors referring to their valid trellis children, trellises to their valid node kinds, and each named node kind holding a card in a flat schema-node space. Open within the sketch: whether trellis and arbor cards are themselves *named* or only indexed by content hash; and whether [flora.md](flora.md) doubles as the human-facing index of the flat kind-name space
-- Whether the metatrellis / metarbor pair unifies into the single schema-card grammar above, or trellis cards and arbor cards keep distinct hardcoded grammars
-- The face's schema node names the governing schema by content hash, while the back carries a `trellis_ref` card-id — truth vs index, or a redundancy to eliminate? (See [data-model.md](data-model.md).)
+- ~~The kind node's representations~~ resolved 2026-07-19 by the hand-encoded passage schema: positional values, two-child kind nodes, kids/crowns as value-petal blossoms ([design/passage-schema.md](design/passage-schema.md))
+- ~~The shape of the schema space~~ resolved in shape 2026-07-19: taproot-anchored closures of bloom-linked trellises, one card per schema ([design/mary-frances-schemas.md](design/mary-frances-schemas.md)); still open within it: cross-schema names (is a position-kind's local name checked against the target schema's own name?) and [flora.md](flora.md) as the human-facing index of kind names
+- ~~metatrellis / metarbor~~ resolved 2026-07-19: one metaschema, one root kind — trellis; the arbor dissolved into the taproot's trellis
+- ~~Face hash vs back trellis_ref~~ working pattern recorded in [data-model.md](data-model.md): two coordinate systems joined by flush history — faces content-addressed, backs stable-id indexes
+- The self-reference sentinel for recursive schema structures (philetus leans: reject recursion, keep explicit levels)
+- The constraint vocabulary: banner-first, body-last, exactly-one-body as machine-checkable rules rather than prose conventions
 - Confirming the content hash function (blake2b-384 working choice)

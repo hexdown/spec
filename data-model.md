@@ -55,12 +55,12 @@ A card's back contains:
 - the **card-id** (40 + 24 packed)
 - the **trellis ref** the face conforms to (a card-id pointing to the trellis card; or one of the bootstrap trellises by reserved id)
 - the **face hash** — content hash of the face sip stream
-- the **arbor-ref** — *taproot cards only*; a card-id pointing to the arbor card governing this document
+- the **arbor-ref** — *taproot cards only*; a stable-id index to the document's anchoring schema (the truth is the taproot face's schema bloom and its closure)
 - the **child card refs** — ordered list of card-ids that fill the graft slots in the face (boughs in branch cards; faces of leaf cards have no graft slots)
 
 A card's face is a tree of document nodes encoded as a flat sip stream. Its tree shape is parseable by any hexdown parser without a schema (the metastructure in [encoding.md](encoding.md)); its meaning is interpreted under the schema named by content hash in the face's own schema node. In a branch card the face is a bough over grafts; in a leaf card the face is stems and blossoms over petals. See "Node classes" below for the classes and [flora.md](flora.md) for the kinds.
 
-The document's arbor is referenced once per document, from the taproot's back via the arbor-ref slot. Non-taproot cards locate their document's arbor by jumping to the taproot at `(card.document_id, 0)` and reading its arbor-ref. The arbor itself is a hexdown card (a leaf card using the *metarbor* trellis), so arbors are first-class data stored within the orchard.
+The document's arbor is anchored once per document, at the taproot: the taproot face's schema node names its trellis by content hash, and the arbor is that trellis plus the closure of schemas it references. Non-taproot cards locate the anchor by jumping to the taproot at `(card.document_id, 0)`. Every schema in the closure is itself a hexdown card, so arbors are first-class data stored within the orchard — and content-addressed by construction, the closure forming a Merkle grove.
 
 ## Card classes
 
@@ -136,12 +136,11 @@ The decision is deliberately parked until the chapter-4 hand-annotation yields r
 
 ## Arbors and trellises
 
-TBD — how an arbor lists its valid card positions and the trellises accepted at each position, how arbors evolve over time, whether arbors are content-addressed. The shipped set is described in [schemas.md](schemas.md).
+An arbor is the taproot's trellis plus its schema closure (2026-07-19). Branch trellises list position kinds, each naming the schema of its grafted cards by content hash — so the closure is content-addressed by construction. How schema *versions* are named and succession recorded over time remains open. The shipped set is described in [schemas.md](schemas.md); the worked mary frances set is in [design/mary-frances-schemas.md](design/mary-frances-schemas.md).
 
 ## Open questions
 
-- Are arbors versioned by hash or by name + version?
-- Are trellises content-addressed or named?
+- Schema versioning: identity is content hash by construction; how versions are *named* and succession recorded (a till?) remains open.
 - Should the back also store a parent card-id, or is parent discoverable only by reverse-child-lookup? (No parent ref keeps the spec tight; reverse lookups can be served by indices.)
 - How are deletion / archival of individual documents handled in an append-only orchard?
 - Reserved document-id `0`: precise role (system metadata? orchard-level config? arbor and trellis registry?)

@@ -9,7 +9,7 @@ the passage trellis written out as an actual schema card under the draft metasch
 3. **the kind node has two children, and its family is derived**: `kind[name-neem, spec]` where spec is either a `kids` blossom (⇒ this is a stem kind) or a `layout` blossom (⇒ a blossom kind; its petal names the petal interpretation — phoneme, numeric, …). no stored family bit, no stored value: both derived.
 4. **crowns are a dedicated node**: a blossom of value petals naming the card-root-eligible kinds, sitting right after the schema's name — front matter first.
 5. **single cards suffice.** the passage schema lands around ~350 sips (≈18% of the slurp cap) — no taproot-document apparatus needed for schemas of this size; the document shape remains available if a schema ever outgrows a card.
-6. **metatrellis and metarbor unify.** there is *one* metaschema, and "trellis" and "arbor" are two of its root kinds — a schema card is a trellis definition or an arbor definition depending on its card root. the pair of hardcoded grammars collapses into one grammar with two roots.
+6. **metatrellis and metarbor unify.** there is *one* metaschema, and "trellis" and "arbor" are two of its root kinds. (superseded 2026-07-19: the arbor root then dissolved entirely — an arbor is a taproot's trellis, and trellis is the sole root kind; see [mary-frances-schemas.md](mary-frances-schemas.md).)
 
 ## the metaschema vocabulary (hardcoded, known by heart)
 
@@ -81,7 +81,7 @@ one card, room to quadruple. decision 5 holds with margin; even the full markdow
 - the acceptable-children representation: kids as value-petal blossoms
 - the crown-list encoding: a crowns blossom after the name
 - schema cards are single cards (document shape optional at scale)
-- metatrellis/metarbor → one metaschema, two root kinds (trellis, arbor)
+- metatrellis/metarbor → one metaschema (root kinds later reduced to trellis alone — the arbor dissolved)
 - remaining for the arbor exercise: the arbor root's grammar (positions! the taproot's body-last, the banner-first idiom, trellis references across cards — where names must resolve *between* schemas, not just within one)
 
 ## open questions

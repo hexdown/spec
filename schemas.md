@@ -1,27 +1,24 @@
 # Schemas
 
-Hexdown ships a small set of built-in schemas covering common document types; extensions may be defined for additional types specific to a deployment. Schemas come in two grains: an **arbor** is a document-level schema defining the valid macrostructure of a document type, and a **trellis** is a card-level schema defining the valid microstructure of one card's face. Trellises select their node kinds from the [flora](flora.md); arbors assign a trellis to each card position.
+Hexdown ships a small set of built-in schemas covering common document types; extensions may be defined for additional types specific to a deployment. Hexdown has one grain of schema — the **trellis**, governing a single card's face. Leaf trellises select their node kinds from the [flora](flora.md); branch trellises assign a schema, by content hash, to each card position they graft. An **arbor** is not a second grain: it is the taproot card's trellis together with the closure of schemas reachable from it — the whole grove a document grows under (2026-07-19; worked set in [design/mary-frances-schemas.md](design/mary-frances-schemas.md)).
 
 Arbors classify **shape, not genre**. A children's story, a technical report, and an encyclopedia article all share the prose arbor — nested, titled divisions of prose; their differences live in the mixture of leaf kinds each document uses, in `dex` metadata, and in plot intent. A new arbor is warranted only when the tree shape itself changes (a message stream, a graph, a table) — never merely because the writing style does.
 
 ## Core arbors
 
-Document-level schemas shipped with hexdown:
+Taproot-anchored schema closures shipped with hexdown:
 
 - **prose** — book → chapter → section. For long-form writing organized hierarchically: stories, reports, articles, manuals.
 - **graph** — space → (directed) edge | node. For network-style documents.
 - **table** — sheet → column | row → cell. For tabular documents.
 
-TBD — full per-arbor definitions: card positions, valid trellises at each position, arity constraints, head/body splits.
+The prose closure is worked card-by-card in [design/mary-frances-schemas.md](design/mary-frances-schemas.md); graph and table remain sketches.
 
 ## Core trellises
 
 The hexdown core ships several trellises. The two bootstrap trellises are hardcoded into the parser; everything else is loaded from trellis cards stored in the orchard.
 
-**Bootstrap trellises** (hardcoded in parsers; their grammars are described in [encoding.md](encoding.md)):
-
-- **metatrellis** — the trellis used by trellis cards.
-- **metarbor** — the trellis used by arbor cards.
+**The metaschema** (hardcoded in parsers; described in [encoding.md](encoding.md)) is the grammar of all schema cards — schema cards mark themselves with the null hash. There are no bootstrap trellis *cards* to list: the metaschema is carried by every parser, and optionally stored as a card any parser can verify against the grammar it knows by heart.
 
 **Core branch trellises** (faces are boughs over grafts; no rendered content):
 
@@ -51,7 +48,7 @@ A taproot face is a bough rooted at the `taproot` kind with 1-64 graft children,
 
 Front matter first, body last — the same positional idiom the branch trellises use (optional banner first, body children after), and the schema node itself follows (hash bloom first, document root last). The back's `child-card-refs` resolves each graft, in face order, to a card-id.
 
-The arbor governing the document is *not* a meta card grafted from the head. It is a card-id stored in a dedicated **arbor-ref** slot on the taproot's *back* (see [data-model.md](data-model.md)), pointing to an arbor card stored elsewhere in the orchard. This keeps the taproot's face purely a tree of cards-in-this-document, while the arbor-ref is a system reference that lives at the catalog layer.
+The arbor is anchored by the taproot's own trellis — named by content hash in its face's schema node, like every card's governor. The back's **arbor-ref** (see [data-model.md](data-model.md)) is a stable-id index for catalog-layer lookups; the face's bloom and its closure are the truth.
 
 The document's *title* is also not on the taproot. The title lives on the body-root branch card (typically a book or section) as that card's own banner. Sub-titles for nested branches (chapters, sections) live on their respective banner attachments. The topmost banner is the document's title.
 
@@ -93,7 +90,7 @@ Each branch level uses its own branch trellis (omnibus, book, chapter, section),
 
 The topmost branch's banner is the document's title.
 
-TBD — formal definition with positions, valid trellises per position, kind-sip assignments, and head/body details.
+The worked schema set — the taproot, book, chapter, and section trellises with their position kinds and bloom references — is in [design/mary-frances-schemas.md](design/mary-frances-schemas.md), absorbing here as it firms.
 
 ## Open questions
 

@@ -9,7 +9,7 @@ The spec covers:
 - **vision and commitments** — settled in broad strokes (cards as content units, append-only deltas, equal footing for participants, modest data model)
 - **data model layering** — orchard → plot → card → (face + back); card-id and flush-id structure
 - **document node classes** — petal, blossom, stem, bough; their roles in branch vs leaf trellises
-- **bootstrap structure** — metatrellis and metarbor as hardcoded trellises; everything else loads dynamically
+- **bootstrap structure** — one hardcoded metaschema; schema cards mark themselves with the null hash; everything else loads dynamically
 - **delta categories** — till (structural) and flush (content); deltas as the source of truth and backs as ephemeral projections
 
 Sections still carrying significant TBDs:
