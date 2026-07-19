@@ -12,11 +12,11 @@ four chapters + front matter converted and close-read (2026-07-18). suggested in
 
 - [x] paragraph / statement / question / exclamation / phrase stems — already in the passage-trellis draft
 - [x] neem + prop blossoms; span for hyphenated compounds ("eaves-dropping", "good-bye") — in draft
-- [x] **speech is structural** (2026-07-18) — a speech stem for utterance by a person, distinct from quotation-from-a-source; quote marks become render output; narration tags stay ordinary phrases
+- [x] **dialogue is structural** (2026-07-18) — spoken utterance is carried by a turn stem with quoth attributions (embedded at phrase level or standing at sentence level), distinct from lifting from a source; quote marks and dialogue punctuation are render output derived from structure
 - [x] **elision and possession are distinguished in the schema** (2026-07-18) — separate glyphs; see discussion notes below
 - [ ] interruption dash — "your silly—I mean your brother's, plan"
 - [ ] chapter banner — title stem on the chapter card's banner leaf
-- [x] **normalization policy** (2026-07-18) — chapter-opener caps ("NEITHER of the children...") normalize at ingest; author-voice hyphenation ("to-day", "fish-worm") is content and preserved
+- [x] **normalization policy** (2026-07-18) — chapter-opener caps ("NEITHER of the children...") normalize at ingest; author-voice hyphenation ("to-day", "fish-worm") is content and preserved; where the source prints comma-after-tag followed by a capitalized continuation, the comma is honored as structure (embedded quoth) and only the capital normalizes — capitalization is derived, never stored (see speech-examples exhibit d)
 
 ### chapter 2 — adds prosody
 
@@ -28,7 +28,7 @@ four chapters + front matter converted and close-read (2026-07-18). suggested in
 ### chapter 47 — adds embedded lectures
 
 - [ ] section structure within a chapter — embedded `###` headings inside a long speech
-- [~] speech containing document-like structure — the toad-stool lecture is *spoken* but typeset as a sub-document; speech-with-sections, or referenced sub-cards? (open)
+- [~] turns containing document-like structure — the toad-stool lecture is *spoken* but typeset as a sub-document; turn-with-sections, or referenced sub-cards? (open)
 - [x] **mid-sentence headings normalize** (2026-07-18) — "They, like most other— / Fungi, / live on dead vegetable matter" becomes a plain heading + full sentences at ingest
 
 ### chapter 23 — adds apparatus
@@ -60,7 +60,7 @@ four chapters + front matter converted and close-read (2026-07-18). suggested in
 - [ ] phrasal genitive — english possession attaches to phrases ("the king of spain's daughter"), so a petal-level possess glyph records orthographic position, not linguistic attachment; does possession eventually become a span/phrase-level marker that renders at the final word?
 - [ ] hexdown-flavored markdown — a spec doc defining the canonical render target and round-trip dialect: inline footnote definition (`^[...]`-style; where a note *renders* — hover, margin, endnote — is a render decision, not an authoring one), curly quotes, which emphasis forms, heading conventions
 - [ ] figure / photo trellises — 167 vendored illustrations awaiting a captioned conversion pass
-- [ ] speech vs citation as card reference — a mature quote stem cites *another card* (mark + offset + breadth, per the passage-trellis draft); speech and citation may converge on shared machinery
+- [ ] dialogue vs citation as card reference — a mature lift stem cites *another card* (mark + offset + breadth); spoken dialogue (turn/quoth) and citation (lift) may converge on shared machinery
 - [ ] onomatopoeia — "caw-caw!", "cluck! caw!" — plain neems unless evidence demands more
 - [ ] tree discipline at the card layer — faces are trees by construction (composition cannot cycle); cycles among card refs forbidden always, checked at flush time; within one document, start strict-tree and admit repeated grafts of the same card only if a real use case demands (orchard-wide sharing of cards across documents is already a deliberate DAG)
 - [ ] phrase-for-word interchangeability — recursion is opt-in per trellis rule (each stem kind lists which children it admits); wanted for the phrasal genitive

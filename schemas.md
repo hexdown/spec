@@ -30,7 +30,7 @@ The hexdown core ships several trellises. The two bootstrap trellises are hardco
 
 **Core leaf trellises** (faces hold stems, blossoms, and petals):
 
-- **passage** — markdown-equivalent prose content (paragraphs, lists, quotes, notes, links).
+- **passage** — markdown-equivalent prose content (paragraphs, lists, lifts, notes, links).
 - **banner** — title + optional summary; lives on body-root branch cards (the topmost banner of a document is the document's title).
 - **at** — contributor handles (typically props).
 - **dex** — generic key/value metadata.
@@ -67,7 +67,7 @@ TBD — concrete kind-sip assignments for each meta card kind in the taproot's b
 
 ## Passage trellis (draft)
 
-The passage trellis produces markdown-equivalent prose leaves. At block scale it admits: paragraph | list | point | quote | note — kind definitions live in [flora.md](flora.md). Proposed additions from the speech design session (turn, speech, quoth, broken, cut) are worked in [design/speech-examples.md](design/speech-examples.md).
+The passage trellis produces markdown-equivalent prose leaves. At block scale it admits: paragraph | list | point | lift | note — kind definitions live in [flora.md](flora.md). Proposed additions from the speech design session (turn, speech, quoth, broken, cut) are worked in [design/speech-examples.md](design/speech-examples.md).
 
 TBD — the formal admission table: legal nesting per position, arity, and head/body structure.
 

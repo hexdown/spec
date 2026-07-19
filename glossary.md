@@ -30,6 +30,8 @@ The node classes form a top-down hierarchy: bough (in branch cards), stem and bl
 
 **blossom** — an inner document node whose direct children are petals; the smallest named word-scale unit in a document tree. Different blossom kinds (neem, prop, quant, enum, uniglyph) interpret their petal sequences differently. Blossoms only appear in leaf trellises.
 
+**crown** — a kind eligible to stand at a leaf card's card root; in horticulture the crown is where stem meets root — the thing a gardener plants. Each leaf trellis declares its crown kinds (the passage trellis's crowns are paragraph, verse, and list); boughs are the branch-side counterpart and are card roots by definition.
+
 **root** — the entry node of a sip-encoded tree. The **card root** is the content entry node of a card's face — the second child of its schema node (a bough in a branch card, a stem or blossom in a leaf card). The **document root** is specifically the card root of the document's taproot card. The **back-root** is the entry node of the back's metaschema record. "Root" alone is context-dependent; the distinct *taproot* concept refers to a card playing the entry-point role for a whole document.
 
 ## Data model

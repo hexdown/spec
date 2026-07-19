@@ -1,43 +1,44 @@
 # speech examples — chapter 4 annotated
 
-worked examples applying the proposed speech stems to real sentences from chapter 4 of the mary frances garden book. vocabulary here is **provisional** — this doc exists so we can look at concrete trees before ruling on the open decisions at the bottom. when the decisions land, the kind definitions move to the spec proper and this doc is absorbed.
+worked examples applying the speech stems to real sentences from chapter 4 of the mary frances garden book (with one guest from chapter 23). the core model is **decided** (2026-07-18): dialogue is carried by a `turn` stem whose children are sentence kinds and `quoth` attributions, with quoths embeddable *inside* sentences at phrase positions — quoted material is never stored as a node; the renderer derives the quote runs. remaining decisions are listed at the bottom; when they land, the kind definitions move to the spec proper and this doc is absorbed.
 
 ## notation
 
 - lowercase word = a **neem** (petals spelled only where interesting)
-- `^word` = a **prop** (renders with its leading capital)
-- `word-word` = a **span** (renders its blossom children hyphen-joined)
+- `^word` = a **prop** — marked even where position would capitalize anyway (`^i`, sentence-initial names): prop-ness is semantic, not positional
+- `span(word word)` = a **span** (renders its blossom children hyphen-joined)
 - `'` in a word = **elide** petal; `*` = **possess** petal
 - indentation = tree structure; `←` = commentary
 
-## proposed kind roster for chapter 4
+## kind roster for chapter 4
 
-| kind | class | children | renders |
-|:--|:--|:--|:--|
-| paragraph | stem | sentence kinds, turns | block with terminal newline |
-| **turn** ★ | stem | speeches and quoths, ≥1 speech | dialogue mechanics (below) |
-| **speech** ★ | stem | sentence kinds | wrapped in `“ ”` |
-| **quoth** ★ | stem | phrases | lowercase join to preceding speech |
-| statement | stem | phrases, cuts | capitalized, terminal `.` |
-| question | stem | phrases, cuts | capitalized, terminal `?` |
-| exclamation | stem | phrases, cuts | capitalized, terminal `!` |
-| **broken** ★ | stem | phrases, cuts | capitalized, terminal `—` (interrupted) |
-| phrase | stem | blossoms, spans | trailing `,` if not last in parent |
-| **cut** ★ | stem | blossoms, spans | trailing `—` instead of `,` |
-| span | stem | neems, props | children joined by `-` |
-| neem / prop | blossom | petals | word (prop capitalized) |
+| kind | class | children | renders | card root? |
+|:--|:--|:--|:--|:--|
+| paragraph | stem | sentence kinds, turns | block with terminal newline | ✓ crown |
+| **turn** ★ | stem | sentence kinds and quoths, ≥1 sentence | quoted runs derived; mechanics below | — |
+| **quoth** ★ | stem | phrases | attribution: lowercase, comma or period by position | — |
+| statement | stem | phrases, pivots, embedded quoths | capitalized, terminal `.` | — |
+| question | stem | phrases, pivots, embedded quoths | capitalized, terminal `?` | — |
+| exclamation | stem | phrases, pivots, embedded quoths | capitalized, terminal `!` | — |
+| **broken** ★ | stem | phrases, pivots, embedded quoths | capitalized, terminal `—` (interrupted) | — |
+| phrase | stem | blossoms, spans | trailing `,` if not last in parent | — |
+| **pivot** ★ | stem | blossoms, spans | trailing `—` instead of `,` | — |
+| span | stem | neems, props | children joined by `-` | — |
+| neem / prop | blossom | petals | word (prop capitalized everywhere) | — |
 
-★ = new in this proposal. sentence kinds appear both as paragraph children (narration) and as speech children (dialogue) — the same interchangeability meta-pattern proposed for phrases-in-word-positions.
+★ = new. earlier drafts had `speech` and `carry` kinds; both were deleted by the embedded-quoth model (2026-07-18) — quoted runs are derivable, and a "resumed" sentence is just a sentence continuing past its embedded quoth. sentence kinds appear both as paragraph children (narration) and as turn children (dialogue); quoths appear at both sentence and phrase level — the interchangeability meta-pattern, twice.
+
+**crown** (proposed term): a kind eligible to stand at a leaf card's root — in horticulture, the crown is where stem meets root, the thing a gardener plants. root-eligibility is declared per-trellis in the schema (the card root comes "from options defined in schema," per the metastructure): the passage trellis's crowns are paragraph | verse | list (verse and list arrive with ch2/ch23); the banner trellis's crown is title. boughs are the branch-side counterpart and are card roots by definition. how a schema card *encodes* its crown list is a question for the hand-encoded passage schema.
 
 ## the dialogue mechanics (turn's render rules)
 
-1. each speech child renders wrapped in `“ ”`
-2. a quoth joins the preceding speech with a space and **no capitalization** (props still capitalize themselves)
-3. **terminal softening:** when the last sentence of a speech is a *statement* and a quoth follows, the statement's `.` renders as `,` — question, exclamation, and broken keep their marks
-4. the quoth's own phrases join with commas; the turn closes the frame with `.`
-5. a speech following a quoth re-opens quotes; its sentences capitalize per their own kinds
+1. **quoted runs are derived.** the renderer wraps each maximal quoth-free run of the turn's quoted material in `“ ”`, closing before each quoth and re-opening after. nothing stores a quote mark.
+2. **embedded quoth** (at a phrase position inside a sentence): renders like a phrase — lowercase, trailing comma. the phrase before it contributes its own natural comma inside the close-quote, and the sentence continues lowercase after the re-open: mid-sentence, no capital to derive.
+3. **sentence-level quoth** (direct child of the turn): trailing `.` when quoted material precedes it; trailing `,` when it introduces (no quoted sentence before it in the turn).
+4. **terminal softening:** a statement immediately followed by a sentence-level quoth renders its `.` as `,` — question, exclamation, and broken keep their marks.
+5. **capitalization is derived throughout:** each quoted sentence capitalizes at its start — except a continuation after an embedded quoth (mid-sentence); quoths render lowercase — except a turn-initial introducer, which opens the frame sentence; props capitalize everywhere.
 
-every rule is local to the turn — nothing outside a turn needs to know dialogue exists.
+every rule is local to the turn — nothing outside a turn needs to know dialogue exists. the comma/period distinction is not a rule at all: **the level is the meaning.**
 
 ## exhibit a — the full dialogue sentence
 
@@ -45,24 +46,22 @@ every rule is local to the turn — nothing outside a turn needs to know dialogu
 
 ```
 turn
-  speech
-    question
-      phrase: is he anywhere about
+  question
+    phrase: is he anywhere about
   quoth
     phrase: inquired ^feather ^flop
     phrase: looking around anxiously
-  speech
-    statement
-      phrase: i thought i saw him go
+  statement
+    phrase: ^i thought ^i saw him go
 ```
 
 render walk:
 
 ```
-“Is he anywhere about?”        ← question capitalizes itself, keeps its ? (rule 3: only statements soften)
- inquired Feather Flop,        ← quoth: lowercase join (rule 2); props capitalize anyway; comma between quoth phrases
- looking around anxiously.     ← turn closes the frame (rule 4)
-“I thought I saw him go.”      ← second speech re-opens (rule 5)
+“Is he anywhere about?”         ← question keeps its mark (softening touches only statements)
+ inquired Feather Flop,         ← quoth's phrases join with the phrase comma...
+ looking around anxiously.      ← ...sentence-level quoth after quoted material: period (rule 3)
+“I thought I saw him go.”       ← quote re-opens for the next run; ^i renders I
 ```
 
 ## exhibit b — quoth is not narration
@@ -72,89 +71,146 @@ render walk:
 ```
 paragraph
   turn
-    speech
-      exclamation
-        phrase: span(caw caw)
-  statement                     ← NOT a quoth: full narration sentence, capitalized, owns its period
+    exclamation
+      phrase: span(caw caw)
+  statement                      ← NOT in a turn: free-standing narration, capitalized, owns its period
     phrase: ^feather ^flop cleared his throat
   turn
-    speech
-      exclamation
-        phrase: span(caw caw)
+    exclamation
+      phrase: span(caw caw)
 ```
 
-this is the case that decides whether `turn` earns its place. the source distinguishes "cleared his throat" (capital F, own period — independent narration) from "inquired feather flop" (lowercase, comma-bound — attribution). without a turn, both would sit as loose paragraph children and the renderer would need order-sensitive heuristics to recover which is which — and we would still need quoth as a distinct kind to mark the bound fragments. the turn makes the binding *structural*: what belongs to the dialogue sentence is inside it; what stands alone stands outside.
+the quoth/narration distinction is now pure containment: attributions live *inside* turns; narration stands *beside* them as paragraph children. this is the case that made turn earn its place.
 
-## exhibit c — terminal softening + elide + continuation
+## exhibit c — sentence-level quoth + softening + elide
 
 > "Yes, he's gone, Feather Flop," laughed Mary Frances. "But let me show you—he has been planning such a delightful garden for me."
 
 ```
 turn
-  speech
-    statement
-      phrase: yes
-      phrase: he's gone            ← neem "he's" = petals h·e·elide·s
-      phrase: ^feather ^flop       ← vocative phrase
+  statement
+    phrase: yes
+    phrase: he's gone            ← neem "he's" = petals h·e·elide·s
+    phrase: ^feather ^flop       ← vocative phrase
   quoth
     phrase: laughed ^mary ^frances
-  speech
-    statement
-      cut: but let me show you     ← renders trailing — instead of ,
-      phrase: he has been planning such a delightful garden for me
+  statement
+    pivot: but let me show you   ← renders trailing — instead of ,
+    phrase: he has been planning such a delightful garden for me
 ```
 
-render walk, showing softening (rule 3):
+render walk:
 
 ```
-“Yes, he's gone, Feather Flop,”   ← the statement's stored terminal is `.` — a quoth follows, so it RENDERS `,`
- laughed Mary Frances.            ← quoth lowercase; turn closes the frame
+“Yes, he's gone, Feather Flop,”  ← softening: the statement's stored . renders , before the quoth (rule 4)
+ laughed Mary Frances.           ← quoted material precedes: the quoth takes a period (rule 3)
 “But let me show you—he has been planning such a delightful garden for me.”
-                                  ← cut emits the —; statement keeps its . (no quoth follows)
+                                 ← new sentence, new run: capital B derived; the pivot supplies the —
 ```
 
-the tree *stores* a statement; the comma is the turn's doing at render time. ingest runs the same rule backwards: quoted material ending in `,` followed by a lowercase said-verb ⇒ recover a statement inside a turn.
+the tree stores a statement; the comma is the turn's doing. ingest runs the rule backwards: quoted material ending `,` + lowercase said-verb ⇒ recover a statement before a sentence-level quoth.
 
-## exhibit d — broken + possess
+## exhibit d — embedded quoth: the vocative exclamation
 
 > "Why, Feather Flop," cried Mary Frances, "How you surprised me! I was so busy studying out Billy's plan for the garden—"
 
+read closely, "Why, Feather Flop, how you surprised me!" is *one exclamation with a vocative* — so the quoth is embedded at a phrase position inside it:
+
 ```
 turn
-  speech
-    statement
-      phrase: why
-      phrase: ^feather ^flop
-  quoth
-    phrase: cried ^mary ^frances
-  speech
-    exclamation
-      phrase: how you surprised me
-    broken                          ← interrupted: renders terminal — and no period
-      phrase: i was so busy studying out ^billy*s plan for the garden
+  exclamation
+    phrase: why
+    phrase: ^feather ^flop
+    quoth
+      phrase: cried ^mary ^frances
+    phrase: how you surprised me
+  broken
+    phrase: ^i was so busy studying out ^billy*s plan for the garden
 ```
 
-renders: softening turns the first statement's terminal to `,` … quoth … then `“How you surprised me! I was so busy studying out Billy's plan for the garden—”` — the broken supplies the trailing `—`, and `^billy*s` renders "Billy's".
+render walk:
 
-(the cut also covers mid-sentence self-repair: "your silly—I mean your brother's, plan" = `cut: your silly` · `phrase: i mean your brother*s` · `phrase: plan`.)
+```
+“Why, Feather Flop,”             ← the phrases' natural commas fall where they always do; quote closes at the quoth
+ cried Mary Frances,             ← embedded quoth: lowercase, comma — a phrase that steps outside the quotes (rule 2)
+“how you surprised me!           ← quote re-opens; the exclamation continues lowercase to its own !
+ I was so busy studying out Billy's plan for the garden—”
+                                 ← broken: trailing — and no period; ^i, ^billy*s render I, Billy's
+```
+
+the 1916 source prints a capital "How" after the comma — loose period typography. the embedded model honors the author's *comma* as structure and normalizes only the *capital*, which costs nothing: capitalization is derived, never stored.
+
+## exhibit e — embedded quoth: the resumed statement
+
+> "I was listening," acknowledged Feather Flop, "and I don't approve of the plan at all."
+
+one utterance-sentence, interrupted and resumed — the lowercase "and" in the source is the structural tell:
+
+```
+turn
+  statement
+    phrase: ^i was listening
+    quoth
+      phrase: acknowledged ^feather ^flop
+    phrase: and ^i don't approve of the plan at all
+```
+
+render walk:
+
+```
+“I was listening,”               ← the phrase's own comma (not last in parent) lands inside the close-quote
+ acknowledged Feather Flop,      ← embedded quoth: lowercase, comma (rule 2)
+“and I don't approve of the plan at all.”
+                                 ← the statement continues lowercase and closes with its own .
+```
+
+an earlier draft needed a `carry` kind for this; embedding made the resumption just *the rest of the sentence*. compare exhibit c, where the quoth stands between sentences and takes a period: the level is the meaning.
+
+## exhibit f — the introducer (from chapter 23)
+
+> At length he blurted out, "You told me, little Miss, I think, that fish-worms were good for the garden—"
+
+```
+turn
+  quoth
+    phrase: at length he blurted out
+  broken
+    phrase: you told me
+    phrase: little ^miss
+    phrase: ^i think
+    phrase: that span(fish worms) were good for the garden
+```
+
+render walk:
+
+```
+At length he blurted out,        ← turn-initial introducer: opens the frame sentence, so it capitalizes;
+                                   no quoted sentence precedes, so it takes a comma (rules 3, 5)
+“You told me, little Miss, I think, that fish-worms were good for the garden—”
+```
+
+(chapter 2's colon-introducer — "as loudly as she dared:" — is a variant waiting in corpus-demands.)
 
 ## document shape and card granularity
 
 chapter 4 as our first document:
 
 ```
-taproot card         (bough: head [] · body [section graft])
-  section card       (bough: head [banner graft] · body [~25 passage grafts])
+taproot card         (bough: 1-64 grafts, body root last — here just [section graft])
+  section card       (bough: banner graft first, then ~25 passage grafts)
     banner card      (leaf: title: chapter 4 · ^feather ^flop*s argument)
-    passage cards    (leaf: one block each — a paragraph or turn-bearing paragraph)
+    passage cards    (leaf: one crown block each — a paragraph, with or without turns)
 ```
 
-back-of-envelope: a slurp caps at 1920 sips (store.md); an english word costs roughly 7-8 sips (petals + blossom kind + count + share of stem overhead), giving a ceiling of **~250 words per leaf card**. chapter 4's longest paragraph is ~80 words — comfortable — but multi-paragraph passages would flirt with the cap. this nudges toward **one block per passage card** (paragraph-scale cards), which also gives splice and reference their natural grain. proposed, not decided.
+back-of-envelope: a slurp caps at 1920 sips (hwatu store design); an english word costs roughly 7-8 sips (petals + blossom kind + count + share of stem overhead), giving a ceiling of **~250 words per leaf card**. chapter 4's longest paragraph is ~80 words — comfortable — so **one block per passage card** stays the lean, pending real sip counts from the full annotation.
 
 ## open decisions
 
-1. does `turn` exist? (exhibit b is the argument for; the alternative is loose children + order-sensitive render heuristics, plus a quoth-like kind anyway)
-2. name for the attribution stem: **quoth** (unmistakable, archaic-charming, zero markup collision) vs **said** (plain, reads naturally in trees) vs **attrib** (sober)
-3. terminal softening as a pure render rule — comfortable after exhibits a/c?
-4. passage-card granularity: one block per leaf card?
-5. `broken` and `cut` as names for the two dash kinds
+1. ~~does `turn` exist?~~ **decided 2026-07-18: yes** — dialogs and plays as first-class citizens; all truth is reached through dialog
+2. ~~attribution stem name~~ **decided 2026-07-18: quoth** — and the citation kind renamed **quote → lift** (a passage lifted from another bed) to clear the neighborhood
+3. ~~carry vs resume~~ **dissolved 2026-07-18** — the embedded-quoth model deleted both `carry` and `speech`: quoths sit at phrase or sentence positions and the punctuation derives from the level
+4. ~~prop marking~~ **decided 2026-07-18** — props are marked even in derived-capital positions (`^i`, sentence-initial names); "I" is english's one prop pronoun
+5. ~~terminal softening~~ **decided 2026-07-18** — the tree stores the statement; the comma is the turn's doing; only the meaningless mark softens
+6. ~~passage-card granularity~~ **decided 2026-07-18: one crown block per leaf card** — try it and see; provisional until the full annotation's sip counts confirm
+7. ~~the two dash kinds~~ **decided 2026-07-18: `pivot` and `broken`** — two kinds, not one: they are two meanings sharing one glyph, and merging by render glyph would be structure-by-typography. the pair encodes agency: *the speaker pivots; the world breaks.* broken needs no question/exclamation variants (interruption suspends illocution — there is only one kind of unfinished); quoth keeps phrase children (real tags have internal clause commas); paired asides are two consecutive pivots. (cut was rejected for its deletion ambiguity; swallow, charming, fails the clause-join case and collides with chapter 23's literal toad-swallowing.)
+8. ~~crown~~ **decided 2026-07-18** — crown is the term; passage's crown set starts as paragraph | verse | list
