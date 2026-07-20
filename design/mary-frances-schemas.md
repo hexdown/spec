@@ -13,6 +13,7 @@ the question was "how does the metaschema map to an arbor definition?" — and t
 | spec shape | the kind is a... | meaning |
 |:--|:--|:--|
 | kids | stem kind | children are nodes of the listed kinds |
+| grafts | bough kind | the position kinds this bough grafts (added 2026-07-20; one shape per family) |
 | layout | blossom kind | petals are interpreted under the named layout |
 | **bloom** | **position kind** | cards grafted at this position parse under the schema with this hash |
 
@@ -23,7 +24,7 @@ the back's `arbor-ref` becomes pure index under the two-coordinate pattern: the 
 ## position kinds
 
 - declared like any kind — `kind[name, bloom(#target-schema)]` — and drawing values in declaration order from the blossom seats, descending (they live only as petal values, in grafts and kids; they never head a node)
-- a bough kind's kids list names position kinds; structurally its children are reserved grafts, each holding one position-kind petal, resolved through the back's child-card-refs in face order
+- a bough kind's grafts list names position kinds; structurally its children are reserved grafts, each holding one position-kind petal, resolved through the back's child-card-refs in face order
 - positional conventions (banner first, body last, exactly-one body) remain prose conventions for now — chapter 4 needed only sets; a constraint vocabulary is future work
 
 ## the schema set
@@ -48,7 +49,7 @@ trellis
 trellis
   neem: section
   crowns: [section]
-  kind  neem: section    kids: [banner passage]     ← the bough
+  kind  neem: section    grafts: [banner passage]   ← the bough
   kind  neem: banner     bloom: #banner              ← position kinds
   kind  neem: passage    bloom: #passage
 ```
@@ -59,7 +60,7 @@ trellis
 trellis
   neem: chapter
   crowns: [chapter]
-  kind  neem: chapter    kids: [banner section]
+  kind  neem: chapter    grafts: [banner section]
   kind  neem: banner     bloom: #banner
   kind  neem: section    bloom: #section
 ```
@@ -70,7 +71,7 @@ trellis
 trellis
   neem: book
   crowns: [book]
-  kind  neem: book       kids: [banner chapter]
+  kind  neem: book       grafts: [banner chapter]
   kind  neem: banner     bloom: #banner
   kind  neem: chapter    bloom: #chapter
 ```
@@ -81,7 +82,7 @@ trellis
 trellis
   neem: taproot
   crowns: [taproot]
-  kind  neem: taproot    kids: [at dex status book chapter section passage]
+  kind  neem: taproot    grafts: [at dex status book chapter section passage]
   kind  neem: at         bloom: #at        ← meta schemas TBD; pads may hold these
   kind  neem: dex        bloom: #dex          slots until the schemas exist
   kind  neem: status     bloom: #status

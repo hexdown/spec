@@ -111,9 +111,11 @@ The schema-card grammar, settled by the hand-encoded passage schema (2026-07-19;
 | `0o73` | kids | blossom | value petals: the acceptable child kinds |
 | `0o72` | crowns | blossom | value petals: the card-root-eligible kinds |
 | `0o71` | layout | blossom | one petal: a blossom kind's petal interpretation |
+| `0o70` | grafts | blossom | value petals: the position kinds a bough grafts |
 
 - **kind values are schema-wide and positional**: stems ascend from `0o01`, boughs descend from `0o57`, blossoms descend from `0o73`; reserved kinds keep their fixed values — a kind node never stores its own value. A pad in a declaration slot skips a seat, letting schemas pin kinds at chosen values.
-- a **kind node** has two children — its name and its spec — and the spec shape determines everything: **kids** ⇒ a stem kind (children are nodes of the listed kinds), **layout** ⇒ a blossom kind (petals interpreted under the named layout), **bloom** ⇒ a position kind (cards grafted there parse under the schema with this hash).
+- a **kind node** has two children — its name and its spec — and the spec shape determines everything, one shape per family: **kids** ⇒ a stem kind (content children), **grafts** ⇒ a bough kind (a bough's admissions *are* its grafts), **layout** ⇒ a blossom kind (petals interpreted under the named layout), **bloom** ⇒ a position kind (cards grafted there parse under the schema with this hash). grafts must name position kinds and kids must not — loud validation, not silent inference. (grafts added 2026-07-20, superseding one day of derived bough-ness: explicit labeling at zero storage cost, per philetus's sustainability challenge.)
+- a pad in a declaration slot skips a seat **in the family of the declaration that follows it** — the look-ahead rule that makes in-face skips decidable (ratified 2026-07-20).
 
 Dynamic loading: when a parser opens a card, it reads the face's schema node, resolves the bloom's hash to a schema card, parses that card under the metaschema (or under its own declared schema, recursively, bottoming out at the null hash), and then interprets the face under it.
 

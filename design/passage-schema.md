@@ -6,7 +6,7 @@ the passage trellis written out as an actual schema card under the draft metasch
 
 1. ~~⚖~~ **decided 2026-07-19: kind values are schema-wide, assigned by declaration order.** (directions re-derived 2026-07-20 under [glyphs.md](../glyphs.md): stems ascend from `0o01`, boughs descend from `0o57`, blossoms descend from `0o73`.) reserved kinds keep their fixed values everywhere. a kind node never stores its own value — *position is the value*. **refinement (philetus): a pad in a kind-declaration slot skips a value** — empty positions let a schema pin kinds at chosen values without a full set (and the same pad-in-a-slot move marks absent fields in any fixed layout — resolving the absence open question).
 2. ~~⚖~~ **decided 2026-07-19: kids lists are blossoms holding value petals** — one petal per acceptable child kind; graft's structural sibling.
-3. **the kind node has two children, and its family is derived**: `kind[name-neem, spec]` where spec is either a `kids` blossom (⇒ a stem kind) or a `layout` blossom (⇒ a blossom kind; its petal names the petal interpretation — phoneme, numeric, …). no stored family bit, no stored value: both derived.
+3. **the kind node has two children, and its family is derived**: `kind[name-neem, spec]` where spec is either a `kids` blossom (⇒ a stem kind) or a `layout` blossom (⇒ a blossom kind; its petal names the petal interpretation — phoneme, numeric, …). no stored family bit, no stored value: both derived. (refined 2026-07-20 by the hwatu schema module, then refined again the same day: a fourth spec shape **grafts** makes bough-ness explicit — kids ⇒ stem, grafts ⇒ bough — the derived rule served one day before philetus's sustainability challenge retired it.)
 4. **crowns are a dedicated node**: a blossom of value petals naming the card-root-eligible kinds, sitting right after the schema's name — front matter first.
 5. **single cards suffice.** the passage schema lands around ~350 sips (≈18% of the slurp cap) — no taproot-document apparatus needed for schemas of this size; the document shape remains available if a schema ever outgrows a card.
 6. **metatrellis and metarbor unify.** there is *one* metaschema, and "trellis" and "arbor" are two of its root kinds. (superseded 2026-07-19: the arbor root then dissolved entirely — an arbor is a taproot's trellis, and trellis is the sole root kind; see [mary-frances-schemas.md](mary-frances-schemas.md).)
@@ -24,6 +24,7 @@ kind values in the metaschema's own context — fixed forever, like the reserved
 | `0o73` | kids | blossom | value petals: the acceptable child kinds |
 | `0o72` | crowns | blossom | value petals: the card-root-eligible kinds |
 | `0o71` | layout | blossom | one petal: the petal-interpretation of a blossom kind (0 = phoneme, …) |
+| `0o70` | grafts | blossom | value petals: the position kinds a bough grafts (added 2026-07-20) |
 
 plus the reserved kinds available everywhere: schema node `0o00`, neem `0o74` (names), graft `0o75`, bloom `0o76` (the null hash marking schema cards), null `0o77`.
 
