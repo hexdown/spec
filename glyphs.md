@@ -7,9 +7,11 @@ the sip value table: every value's kind family, display glyph, and meanings as a
 kind sips are separated into four families by their leading bits, so the metastructure parses with no schema in hand:
 
 - first bit low (`b0xxxxx`, 32 values) — **stem** node: children are nodes
-- first bit high, second low (`b10xxxx`, 16 values) — **branch** node: children are exclusively grafts
+- first bit high, second low (`b10xxxx`, 16 values) — **bough** node: children are exclusively grafts
 - first two bits high (`b11xxxx`, 15 values) — **blossom** node: children are petals
-- all bits high (`b111111`) — **null** node: a single sip, no count, no children
+- all bits high (`b111111`) — **pad** node: a single sip, no count, no children (the null sip's node)
+
+("branch" is a card-level word — branch *cards* have bough-family roots; the kind family is named for the bough itself.)
 
 the whole structural parser:
 
@@ -19,7 +21,7 @@ parse_node():
     if kind == 0o77:   return null                                  # pad
     count = read_sip() + 1
     if kind >= 0o60:   return blossom(kind, read_sips(count))       # petals
-    if kind >= 0o40:   return branch(kind, [parse_node() ...])      # children must be grafts
+    if kind >= 0o40:   return bough(kind, [parse_node() ...])       # children must be grafts
     return stem(kind, [parse_node() for _ in range(count)])
 ```
 
@@ -32,7 +34,7 @@ alphanumeric petals carry their base-36 value: digit *d* = value *d*, letter `a`
 contextual kinds take their values positionally, per family, from declaration order in the governing schema:
 
 - **stems ascend** from `0o01` (`0o00` is the reserved schema node)
-- **branches descend** from `0o57` — every schema's first bough wears `Ω`, and contextual boughs stay in greek
+- **boughs descend** from `0o57` — every schema's first bough wears `Ω`, and contextual boughs stay in greek
 - **blossoms descend** from `0o73` (below the reserved top)
 
 a pad in a declaration slot skips a seat, letting schemas pin kinds at chosen values. by convention a schema declares **prop first and quant second** among its blossoms, seating them at `^` and `=` — conventional seats, not reservations.
@@ -75,22 +77,22 @@ each value has one meaning as a node kind (contextual unless marked ⊛ reserved
 | `0o35` | stem | `t` | | `t` |
 | `0o36` | stem | `u` | | `u` |
 | `0o37` | stem | `v` | | `v` |
-| `0o40` | branch | `w` | | `w` |
-| `0o41` | branch | `x` | | `x` |
-| `0o42` | branch | `y` | | `y` |
-| `0o43` | branch | `z` | | `z` |
-| `0o44` | branch | `β` | | |
-| `0o45` | branch | `Γ` | | |
-| `0o46` | branch | `Δ` | | |
-| `0o47` | branch | `θ` | | |
-| `0o50` | branch | `λ` | | |
-| `0o51` | branch | `μ` | | |
-| `0o52` | branch | `Ξ` | | |
-| `0o53` | branch | `π` | | |
-| `0o54` | branch | `Σ` | | |
-| `0o55` | branch | `φ` | | |
-| `0o56` | branch | `ψ` | | |
-| `0o57` | branch | `Ω` | | |
+| `0o40` | bough | `w` | | `w` |
+| `0o41` | bough | `x` | | `x` |
+| `0o42` | bough | `y` | | `y` |
+| `0o43` | bough | `z` | | `z` |
+| `0o44` | bough | `β` | | |
+| `0o45` | bough | `Γ` | | |
+| `0o46` | bough | `Δ` | | |
+| `0o47` | bough | `θ` | | |
+| `0o50` | bough | `λ` | | |
+| `0o51` | bough | `μ` | | |
+| `0o52` | bough | `Ξ` | | |
+| `0o53` | bough | `π` | | |
+| `0o54` | bough | `Σ` | | |
+| `0o55` | bough | `φ` | | |
+| `0o56` | bough | `ψ` | | |
+| `0o57` | bough | `Ω` | | |
 | `0o60` | blossom | `:` | | |
 | `0o61` | blossom | `!` | | |
 | `0o62` | blossom | `?` | | |
@@ -106,7 +108,7 @@ each value has one meaning as a node kind (contextual unless marked ⊛ reserved
 | `0o74` | blossom | `·` | ⊛ **neem** — the universal phonetic word | |
 | `0o75` | blossom | `'` | ⊛ **graft** — join to child card | **elide** |
 | `0o76` | blossom | `*` | ⊛ **bloom** — hash vector | **possess** |
-| `0o77` | null | `-` | ⊛ **null** — the pad | **beat** |
+| `0o77` | pad | `-` | ⊛ **null** — the pad | **beat** |
 
 (neem's glyph is the **interpunct** `·`, decided 2026-07-20: the actual roman word-separator — `SENATVS·POPVLVSQVE·ROMANVS` — the mark that divided words for a millennium now opens every word. the draft's `"` was rejected as escaping-hostile in yaml envelopes; `º`, a little mouth speaking, lost by sitting one pixel from `°` degree.)
 
@@ -114,5 +116,5 @@ each value has one meaning as a node kind (contextual unless marked ⊛ reserved
 
 - the null sip is all-ones (`0o77`), as cheap to test as all-zeros; the null hash is a bloom of 64 beats and still renders as 64 dashes
 - every schema card opens with the visible signature `01*-` followed by 64 dashes; every content card with `01*-` followed by its schema hash
-- greek branch glyphs and `±` are non-ascii: the visible form trades a little typability for boughs you can spot at a glance
+- greek bough glyphs and `±` are non-ascii: the visible form trades a little typability for boughs you can spot at a glance
 - known confusables `l`/`1` and `o`/`0` survive (the alphabet and digits are both needed); position disambiguates, inspectors may distinguish typographically

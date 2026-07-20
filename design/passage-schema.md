@@ -4,7 +4,7 @@ the passage trellis written out as an actual schema card under the draft metasch
 
 ## the six decisions this forces
 
-1. ~~⚖~~ **decided 2026-07-19: kind values are schema-wide, assigned by declaration order.** (directions re-derived 2026-07-20 under [glyphs.md](../glyphs.md): stems ascend from `0o01`, branches descend from `0o57`, blossoms descend from `0o73`.) reserved kinds keep their fixed values everywhere. a kind node never stores its own value — *position is the value*. **refinement (philetus): a pad in a kind-declaration slot skips a value** — empty positions let a schema pin kinds at chosen values without a full set (and the same pad-in-a-slot move marks absent fields in any fixed layout — resolving the absence open question).
+1. ~~⚖~~ **decided 2026-07-19: kind values are schema-wide, assigned by declaration order.** (directions re-derived 2026-07-20 under [glyphs.md](../glyphs.md): stems ascend from `0o01`, boughs descend from `0o57`, blossoms descend from `0o73`.) reserved kinds keep their fixed values everywhere. a kind node never stores its own value — *position is the value*. **refinement (philetus): a pad in a kind-declaration slot skips a value** — empty positions let a schema pin kinds at chosen values without a full set (and the same pad-in-a-slot move marks absent fields in any fixed layout — resolving the absence open question).
 2. ~~⚖~~ **decided 2026-07-19: kids lists are blossoms holding value petals** — one petal per acceptable child kind; graft's structural sibling.
 3. **the kind node has two children, and its family is derived**: `kind[name-neem, spec]` where spec is either a `kids` blossom (⇒ a stem kind) or a `layout` blossom (⇒ a blossom kind; its petal names the petal interpretation — phoneme, numeric, …). no stored family bit, no stored value: both derived.
 4. **crowns are a dedicated node**: a blossom of value petals naming the card-root-eligible kinds, sitting right after the schema's name — front matter first.
@@ -15,7 +15,7 @@ the passage trellis written out as an actual schema card under the draft metasch
 
 kind values in the metaschema's own context — fixed forever, like the reserved kinds:
 
-(re-valued 2026-07-20 under [glyphs.md](../glyphs.md) — four families, null at `0o77`, blossoms and branches descend.)
+(re-valued 2026-07-20 under [glyphs.md](../glyphs.md) — four families, null at `0o77`, blossoms and boughs descend.)
 
 | value | kind | family | children |
 |:--|:--|:--|:--|

@@ -4,7 +4,7 @@ The flora of hexdown: a field guide to the **kinds** of document node — every 
 
 This is a reference: consult it when you meet an unfamiliar kind rather than reading it straight through. The speech-session kinds — turn, quoth, pivot, broken — were decided 2026-07-18 and are cataloged below; the worked exhibits live in [design/speech-examples.md](design/speech-examples.md) until that doc is absorbed.
 
-The metastructure's reserved kinds (pad, schema node, neem, graft, bloom) are defined in [encoding.md](encoding.md); this catalog covers content kinds — including neem, the one kind with dual citizenship: reserved by the metastructure, cataloged here as content. Structurally, kinds occupy four families by their leading bits — stems hold nodes, branches hold only grafts, blossoms hold petals, and the null kind pads (see [glyphs.md](glyphs.md)).
+The metastructure's reserved kinds (pad, schema node, neem, graft, bloom) are defined in [encoding.md](encoding.md); this catalog covers content kinds — including neem, the one kind with dual citizenship: reserved by the metastructure, cataloged here as content. Structurally, kinds occupy four families by their leading bits — stems hold nodes, boughs hold only grafts, blossoms hold petals, and the null kind pads (see [glyphs.md](glyphs.md)).
 
 ## Blossoms
 

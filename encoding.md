@@ -47,7 +47,7 @@ The full 64-value table lives on the reference shelf: **[glyphs.md](glyphs.md)**
 - Every other node's second sip is a **count**: values 0-63 encode 1-64 children. There is exactly one node form.
 - The kind sip's leading bits partition all kinds into four families (2026-07-20):
   - **stem family** (`b0xxxxx`, 32 values) — children are nodes, parsed recursively
-  - **branch family** (`b10xxxx`, 16 values) — children are nodes that must all be grafts: boughs wear their family on their sleeve
+  - **bough family** (`b10xxxx`, 16 values) — children are nodes that must all be grafts: a bough wears its family on its sleeve ("branch" stays a card-level word)
   - **blossom family** (`b11xxxx`, 15 values) — children are petals: single sips, flat, no substructure
   - **null** (`b111111`) — the pad, a single sip
 - A petal's interpretation is determined by its parent's kind. Every leaf of every face is a petal.
@@ -65,7 +65,7 @@ Kind values are contextual — their meaning is assigned by the governing schema
 | `0o76` | bloom       | blossom | petals are hash sips; 64 petals encode a 384-bit content hash         |
 | `0o77` | null        | —       | the pad: single-sip padding and the empty slot                        |
 
-This leaves each context 31 free stem kinds, 16 free branch kinds, and 12 free blossom kinds, assigned positionally by the governing schema: stems ascend from `0o01`, branches descend from `0o57` (first boughs wear greek), blossoms descend from `0o73`. (The two reference blossoms — graft and bloom — sit adjacent at the top with neem, the name-and-word blossom, just below; what the metastructure sketch called *symbol* merged into neem: the metaschema names things in the same word-kind prose speaks. By convention a schema declares prop first and quant second among its blossoms, seating them at `^` and `=`.)
+This leaves each context 31 free stem kinds, 16 free bough kinds, and 12 free blossom kinds, assigned positionally by the governing schema: stems ascend from `0o01`, boughs descend from `0o57` (wearing greek), blossoms descend from `0o73`. (The two reference blossoms — graft and bloom — sit adjacent at the top with neem, the name-and-word blossom, just below; what the metastructure sketch called *symbol* merged into neem: the metaschema names things in the same word-kind prose speaks. By convention a schema declares prop first and quant second among its blossoms, seating them at `^` and `=`.)
 
 ### The schema node
 
@@ -112,7 +112,7 @@ The schema-card grammar, settled by the hand-encoded passage schema (2026-07-19;
 | `0o72` | crowns | blossom | value petals: the card-root-eligible kinds |
 | `0o71` | layout | blossom | one petal: a blossom kind's petal interpretation |
 
-- **kind values are schema-wide and positional**: stems ascend from `0o01`, branches descend from `0o57`, blossoms descend from `0o73`; reserved kinds keep their fixed values — a kind node never stores its own value. A pad in a declaration slot skips a seat, letting schemas pin kinds at chosen values.
+- **kind values are schema-wide and positional**: stems ascend from `0o01`, boughs descend from `0o57`, blossoms descend from `0o73`; reserved kinds keep their fixed values — a kind node never stores its own value. A pad in a declaration slot skips a seat, letting schemas pin kinds at chosen values.
 - a **kind node** has two children — its name and its spec — and the spec shape determines everything: **kids** ⇒ a stem kind (children are nodes of the listed kinds), **layout** ⇒ a blossom kind (petals interpreted under the named layout), **bloom** ⇒ a position kind (cards grafted there parse under the schema with this hash).
 
 Dynamic loading: when a parser opens a card, it reads the face's schema node, resolves the bloom's hash to a schema card, parses that card under the metaschema (or under its own declared schema, recursively, bottoming out at the null hash), and then interprets the face under it.

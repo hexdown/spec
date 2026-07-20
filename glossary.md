@@ -22,7 +22,7 @@ Named concepts in hexdown, in rough dependency order — encoding terms first, t
 
 ## Document nodes
 
-The node classes form a top-down hierarchy: bough (in branch cards), stem and blossom (in leaf cards), graft (inside boughs), and petal (the sole leaf form, inside blossom-family nodes). Structurally every kind belongs to one of four families by its leading bits: stem-family kinds hold nodes, branch-family kinds hold only grafts, blossom-family kinds hold petals, and the null kind is the single-sip pad (see [glyphs.md](glyphs.md)). See [data-model.md](data-model.md) for the card and node classes and [flora.md](flora.md) for the kinds within each.
+The node classes form a top-down hierarchy: bough (in branch cards), stem and blossom (in leaf cards), graft (inside boughs), and petal (the sole leaf form, inside blossom-family nodes). Structurally every kind belongs to one of four families by its leading bits: stem-family kinds hold nodes, bough-family kinds hold only grafts, blossom-family kinds hold petals, and the null kind is the single-sip pad (see [glyphs.md](glyphs.md)). "Branch" is a card-level word only. See [data-model.md](data-model.md) for the card and node classes and [flora.md](flora.md) for the kinds within each.
 
 **bough** — the top-level inner node of a branch trellis. Its direct children are grafts — single sips whose values are kind glyphs naming the kind of child card at each position. The card's back resolves each graft position to a child card-id. Boughs hold no rendered content directly; all content lives in leaf cards.
 
