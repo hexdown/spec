@@ -89,7 +89,7 @@ Document content is represented as a tree of nodes within each card's face. The 
 - **stem** — inner node whose direct children are nodes — blossoms or other stems; combines word-scale units into larger structures (appears only in leaf trellises)
 - **bough** — top-level inner node of a branch trellis; its direct children are grafts (appears only in branch trellises)
 
-Structurally, the classes collapse onto the metastructure's two families: stems and boughs parse identically (stem family — children are nodes), and blossoms and grafts parse identically (blossom family — children are petals). Every node begins with a kind sip whose high bit says which family it belongs to, followed by a count sip; see the metastructure in [encoding.md](encoding.md).
+Structurally, these map onto the metastructure's four kind families: stems are stem-family (children are nodes), boughs are branch-family (children must all be grafts — a bough wears its family on its sleeve), blossoms and grafts are blossom-family (children are petals), and the pad is the null kind. Every node begins with a kind sip whose leading bits say which family it belongs to, followed by a count sip; see the metastructure in [encoding.md](encoding.md) and the full table in [glyphs.md](glyphs.md).
 
 The class a card's face inhabits depends on its trellis flavor. **Branch trellises** produce faces rooted in a bough, whose children are grafts naming child card kinds — branch card faces hold no rendered content. **Leaf trellises** produce faces rooted in a stem or blossom over petals — leaf cards hold the actual rendered material.
 

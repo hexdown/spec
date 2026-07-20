@@ -26,29 +26,14 @@ Beat, elide, and possess are the glyph values that are neither letters nor digit
 
 Markdown-facing renders emit `’` for both elide and possess; the structural distinction is preserved for orthographies (such as pentabased's) that render them differently. (Decided 2026-07-18; corpus evidence in [design/corpus-demands.md](design/corpus-demands.md).)
 
-### The glyph table (proposed 2026-07-19)
+### The glyph table
 
-The high bit splits the glyph space as it splits the kind space — a **word half** and a **value half**:
+The full 64-value table lives on the reference shelf: **[glyphs.md](glyphs.md)** (adopted 2026-07-20). Its essentials:
 
-Every value has a display glyph (so any stream renders); only some values carry petal *meanings* so far — the reserves keep their glyphs while awaiting purposes:
-
-| values | glyph | meaning |
-|:--------|:------|:------|
-| `0` | `-` | **beat** — the null sip, structurally forced (pads, null hash, collision arena) |
-| `1-26` | `a-z` | letters: alphabet position is the value, a=1 … z=26 |
-| `27` | `'` | **elide** |
-| `28` | `*` | **possess** |
-| `29-31` | `_ ( )` | word-half reserve (display glyphs only) |
-| `32` | `^` | **the first blossom seat** (`b100000`): by convention a schema declares prop first among its blossoms, so prop wears the caret — the annotation notation made real |
-| `33-42` | `0-9` | digits: digit *d* sits at 33+*d* — low five bits minus one |
-| `43-60` | `, ; : ! ? = ~ / \ \| < > [ ] { } @ %` | value-half reserve (display glyphs only) |
-| `61` | `.` | **neem** — the quietest mark for the most frequent kind sip: a dot opens every word |
-| `62` | `+` | **graft** — the join site, drawn as a junction |
-| `63` | `#` | **bloom** — the hash glyph is the hash node |
-
-Properties: neem petals live entirely in the word half (one bit-test validates a phonetic blossom); digits self-code as low-five-bits-minus-one; raw neem streams sort alphabetically by value, so name indexes can binary-search sip streams without decoding. Emergent readability of the visible form: a word renders as a dot, a count letter, then nearly itself (`caw-caw` → `.fcaw-caw`); a full bloom opens `##`; every schema card opens with the greppable signature `--ab##…`.
-
-Known confusables, honestly: `l`/`1` and `o`/`0` survive (the full alphabet and digits are both needed); position disambiguates in parsing, and inspectors can distinguish them typographically. Structural kind sips of *contextual* kinds necessarily share glyphs with letters and digits (a stem kind at value 3 displays `c`) — the visible form is skimmable, not self-describing; the parser is twenty lines away whenever truth is needed.
+- **petals are base-36**: digit *d* = value *d*, `a` = 10 … `z` = 35 — `int(glyph, 36)` in any language; raw neem streams sort alphabetically, so name indexes binary-search sip streams without decoding; a petal below 36 is always alphanumeric
+- the small marks sit at the top: **elide** `0o75`, **possess** `0o76`, **beat** `0o77` — sharing seats with the graft, bloom, and null kinds across the kind/petal namespaces
+- every schema card opens with the visible signature `01*-` followed by 64 dashes; a word renders as an interpunct, a count digit, then nearly itself (`caw-caw` → `·6caw-caw`)
+- known confusables `l`/`1` and `o`/`0` survive; position disambiguates, and the visible form is skimmable, not self-describing — the parser is twenty lines away whenever truth is needed
 
 ## Metastructure
 
@@ -58,11 +43,13 @@ Known confusables, honestly: `l`/`1` and `o`/`0` survive (the full alphabet and 
 
 - A face is: zero or more leading pads, one **schema node**, zero or more trailing pads. The entire document tree hangs beneath the schema node.
 - Every node begins with a **kind sip**.
-- A **pad** (kind `b000000`) is a single-sip node with no count and no children. Before and after the schema node, pads are the collision-resolution arena for the content-addressed face hash and trailing slack; parsers skip both. In a child position, a pad is an intentionally empty slot — an absent field in a fixed layout, or a skipped value in a positional kind-declaration list (2026-07-19).
+- A **pad** (the null kind, `b111111` — all bits high, as cheap to test as all-zeros) is a single-sip node with no count and no children. Before and after the schema node, pads are the collision-resolution arena for the content-addressed face hash and trailing slack; parsers skip both. In a child position, a pad is an intentionally empty slot — an absent field in a fixed layout, or a skipped value in a positional kind-declaration list.
 - Every other node's second sip is a **count**: values 0-63 encode 1-64 children. There is exactly one node form.
-- The kind sip's high bit partitions all kinds into two families:
-  - **stem family** (`b0xxxxx`) — children are nodes, parsed recursively
-  - **blossom family** (`b1xxxxx`) — children are petals: single sips, flat, no substructure
+- The kind sip's leading bits partition all kinds into four families (2026-07-20):
+  - **stem family** (`b0xxxxx`, 32 values) — children are nodes, parsed recursively
+  - **branch family** (`b10xxxx`, 16 values) — children are nodes that must all be grafts: boughs wear their family on their sleeve
+  - **blossom family** (`b11xxxx`, 15 values) — children are petals: single sips, flat, no substructure
+  - **null** (`b111111`) — the pad, a single sip
 - A petal's interpretation is determined by its parent's kind. Every leaf of every face is a petal.
 - A blossom-family node is at most 66 sips: kind + count + up to 64 petals.
 
@@ -70,19 +57,19 @@ Known confusables, honestly: `l`/`1` and `o`/`0` survive (the full alphabet and 
 
 Kind values are contextual — their meaning is assigned by the governing schema, per parent context — except five reserved values that mean the same thing in every context, forever:
 
-| value     | kind        | family  | role                                                                 |
+| value | kind        | family  | role                                                                 |
 |:----------|:------------|:--------|:---------------------------------------------------------------------|
-| `b000000` | pad         | —       | single-sip padding at the face's edges                                |
-| `b000001` | schema node | stem    | opens every face; exactly 2 children: bloom (schema hash) + card root |
-| `b111101` | neem        | blossom | petals are phonemes: the universal phonetic word — prose word and metaschema name alike |
-| `b111110` | graft       | blossom | exactly 1 petal naming the kind of a grafted child card               |
-| `b111111` | bloom       | blossom | petals are hash sips; 64 petals encode a 384-bit content hash         |
+| `0o00` | schema node | stem    | opens every face; exactly 2 children: bloom (schema hash) + card root |
+| `0o74` | neem        | blossom | petals are phonemes: the universal phonetic word — prose word and metaschema name alike |
+| `0o75` | graft       | blossom | exactly 1 petal naming the kind of a grafted child card               |
+| `0o76` | bloom       | blossom | petals are hash sips; 64 petals encode a 384-bit content hash         |
+| `0o77` | null        | —       | the pad: single-sip padding and the empty slot                        |
 
-This leaves each context 30 free stem kinds and 29 free blossom kinds — the schema card governing a context assigns them. (Values arranged 2026-07-18: the two reference blossoms — graft and bloom — sit adjacent at the top, with neem, the name-and-word blossom, just below. What the metastructure sketch called *symbol* merged into neem: the metaschema names things in the same word-kind prose speaks.)
+This leaves each context 31 free stem kinds, 16 free branch kinds, and 12 free blossom kinds, assigned positionally by the governing schema: stems ascend from `0o01`, branches descend from `0o57` (first boughs wear greek), blossoms descend from `0o73`. (The two reference blossoms — graft and bloom — sit adjacent at the top with neem, the name-and-word blossom, just below; what the metastructure sketch called *symbol* merged into neem: the metaschema names things in the same word-kind prose speaks. By convention a schema declares prop first and quant second among its blossoms, seating them at `^` and `=`.)
 
 ### The schema node
 
-Every face's first non-pad node is a schema node (`b000001`) with exactly two children, in the positional idiom used everywhere in hexdown — identification first, body last:
+Every face's first non-pad node is a schema node (`0o00`) with exactly two children, in the positional idiom used everywhere in hexdown — identification first, body last:
 
 1. a **bloom** carrying the content hash of the schema card governing this face — or the **null hash** (64 beat petals) if this card *is* a schema card, parsed under the hardcoded metaschema
 2. the face's **card root** node, whose kind is one of the options the schema defines. (The **document root** is specifically the card root of a document's taproot card.)
@@ -98,10 +85,11 @@ The families give every face the same silhouette: branch faces bottom out in gra
 ```
 parse_node():
     kind = read_sip()
-    if kind == PAD:      return pad
+    if kind == 0o77:   return pad
     count = read_sip() + 1
-    if kind & 0b100000:  return blossom(kind, read_sips(count))   # petals
-    else:                return stem(kind, [parse_node() for _ in range(count)])
+    if kind >= 0o60:   return blossom(kind, read_sips(count))     # petals
+    if kind >= 0o40:   return branch(kind, [parse_node() ...])    # children must be grafts
+    return stem(kind, [parse_node() for _ in range(count)])
 ```
 
 That is the complete structural layer. Everything else — statements, turns, quants, taproots — is semantics, carried by schema cards addressed by hash.
@@ -118,14 +106,13 @@ The schema-card grammar, settled by the hand-encoded passage schema (2026-07-19;
 
 | value | kind | family | children |
 |:--|:--|:--|:--|
-| `b000010` | trellis | stem | name-neem, crowns, kind* — the sole root kind of schema cards |
-| `b000011` | — | | unassigned (the arbor root dissolved: an arbor is a taproot's trellis) |
-| `b000100` | kind | stem | name-neem, spec |
-| `b100000` | kids | blossom | value petals: the acceptable child kinds |
-| `b100001` | crowns | blossom | value petals: the card-root-eligible kinds |
-| `b100010` | layout | blossom | one petal: a blossom kind's petal interpretation |
+| `0o01` | trellis | stem | name-neem, crowns, kind* — the sole root kind of schema cards |
+| `0o02` | kind | stem | name-neem, spec |
+| `0o73` | kids | blossom | value petals: the acceptable child kinds |
+| `0o72` | crowns | blossom | value petals: the card-root-eligible kinds |
+| `0o71` | layout | blossom | one petal: a blossom kind's petal interpretation |
 
-- **kind values are schema-wide and positional**: the nth stem kind declared takes the nth free stem value, blossom kinds count up from `b100000`, reserved kinds keep their fixed values — a kind node never stores its own value. A pad in a declaration slot skips a value, letting schemas pin kinds at chosen seats.
+- **kind values are schema-wide and positional**: stems ascend from `0o01`, branches descend from `0o57`, blossoms descend from `0o73`; reserved kinds keep their fixed values — a kind node never stores its own value. A pad in a declaration slot skips a seat, letting schemas pin kinds at chosen values.
 - a **kind node** has two children — its name and its spec — and the spec shape determines everything: **kids** ⇒ a stem kind (children are nodes of the listed kinds), **layout** ⇒ a blossom kind (petals interpreted under the named layout), **bloom** ⇒ a position kind (cards grafted there parse under the schema with this hash).
 
 Dynamic loading: when a parser opens a card, it reads the face's schema node, resolves the bloom's hash to a schema card, parses that card under the metaschema (or under its own declared schema, recursively, bottoming out at the null hash), and then interprets the face under it.

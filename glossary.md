@@ -10,19 +10,19 @@ Named concepts in hexdown, in rough dependency order — encoding terms first, t
 
 **graft** — a blossom-family node inside a bough; the site where a child card is joined to its parent branch card. Holds exactly one petal naming the kind of child card grafted at that position; the card's back resolves each graft, in face order, to a child card-id via its child-card-refs list. Grafts are the structural counterpart of content blossoms (blossoms bottom out leaf faces with rendered petals; grafts bottom out branch faces with reference petals), and appear only in branch trellises.
 
-**beat** — the null sip (value 0x00, rendered as `-`). The pad node's kind, the petal of intentional absence (a bloom of 64 beats is the null hash), and collision-resolution padding at the start of a content-addressed sip sequence.
+**beat** — the null sip (value `0o77`, all bits high, rendered as `-`). The pad node's kind, the petal of intentional absence (a bloom of 64 beats is the null hash), and collision-resolution padding at the start of a content-addressed sip sequence.
 
 **pad** — a single-sip node whose kind is the beat value. Pads appear only before and after a face's schema node — leading pads are the collision-resolution arena for the face hash, trailing pads are slack; parsers skip both.
 
-**bloom** — the reserved blossom kind (`b111111`) whose petals carry a content hash: a full bloom's 64 petals encode a 384-bit hash, and a bloom of 64 beats is the null hash by which a schema card marks itself. Blooms are a species of blossom.
+**bloom** — the reserved blossom kind (`0o76`) whose petals carry a content hash: a full bloom's 64 petals encode a 384-bit hash, and a bloom of 64 beats is the null hash by which a schema card marks itself. Blooms are a species of blossom.
 
-**neem** — the reserved blossom kind (`b111101`) whose petals are phonemes: the universal phonetic word. Prose words and metaschema names are the same kind — schemas and kinds name themselves with neems. (The metastructure sketch's *symbol* merged into neem, 2026-07-18.)
+**neem** — the reserved blossom kind (`0o74`) whose petals are phonemes: the universal phonetic word. Prose words and metaschema names are the same kind — schemas and kinds name themselves with neems. (The metastructure sketch's *symbol* merged into neem, 2026-07-18.)
 
-**schema node** — the reserved stem kind (`b000001`) that opens every face, with exactly two children: a bloom carrying the content hash of the card's governing schema (the null hash for schema cards), and the face's card root.
+**schema node** — the reserved stem kind (`0o00`) that opens every face, with exactly two children: a bloom carrying the content hash of the card's governing schema (the null hash for schema cards), and the face's card root.
 
 ## Document nodes
 
-The node classes form a top-down hierarchy: bough (in branch cards), stem and blossom (in leaf cards), graft (inside boughs), and petal (the sole leaf form, inside blossom-family nodes). Structurally every kind belongs to one of two families by its high bit: stem-family kinds hold nodes, blossom-family kinds hold petals. See [data-model.md](data-model.md) for the classes and [flora.md](flora.md) for the kinds within each class.
+The node classes form a top-down hierarchy: bough (in branch cards), stem and blossom (in leaf cards), graft (inside boughs), and petal (the sole leaf form, inside blossom-family nodes). Structurally every kind belongs to one of four families by its leading bits: stem-family kinds hold nodes, branch-family kinds hold only grafts, blossom-family kinds hold petals, and the null kind is the single-sip pad (see [glyphs.md](glyphs.md)). See [data-model.md](data-model.md) for the card and node classes and [flora.md](flora.md) for the kinds within each.
 
 **bough** — the top-level inner node of a branch trellis. Its direct children are grafts — single sips whose values are kind glyphs naming the kind of child card at each position. The card's back resolves each graft position to a child card-id. Boughs hold no rendered content directly; all content lives in leaf cards.
 

@@ -4,7 +4,7 @@ The flora of hexdown: a field guide to the **kinds** of document node — every 
 
 This is a reference: consult it when you meet an unfamiliar kind rather than reading it straight through. The speech-session kinds — turn, quoth, pivot, broken — were decided 2026-07-18 and are cataloged below; the worked exhibits live in [design/speech-examples.md](design/speech-examples.md) until that doc is absorbed.
 
-The metastructure's reserved kinds (pad, schema node, neem, graft, bloom) are defined in [encoding.md](encoding.md); this catalog covers content kinds — including neem, the one kind with dual citizenship: reserved by the metastructure, cataloged here as content. Structurally, blossom kinds occupy the blossom family (high-bit kind values, children are petals) and stem kinds the stem family (children are nodes).
+The metastructure's reserved kinds (pad, schema node, neem, graft, bloom) are defined in [encoding.md](encoding.md); this catalog covers content kinds — including neem, the one kind with dual citizenship: reserved by the metastructure, cataloged here as content. Structurally, kinds occupy four families by their leading bits — stems hold nodes, branches hold only grafts, blossoms hold petals, and the null kind pads (see [glyphs.md](glyphs.md)).
 
 ## Blossoms
 
@@ -17,7 +17,7 @@ A blossom's kind determines how its petal children are interpreted:
 
 The full sip → phoneme/glyph mapping for phonetic petals lives in [encoding.md](encoding.md).
 
-- **neem** — a phonetic word or sub-word; petals are phonemes under the core phoneme mapping, plus the small marks: beat joins homogeneous compounds within a single neem (`to-day`, `caw-caw`), elide marks omission (`haven't`), possess marks the genitive (`flop*s`). Reserved at `b111101` — the one universal content kind: prose words and metaschema names are both neems.
+- **neem** — a phonetic word or sub-word; petals are phonemes under the core phoneme mapping, plus the small marks: beat joins homogeneous compounds within a single neem (`to-day`, `caw-caw`), elide marks omission (`haven't`), possess marks the genitive (`flop*s`). Reserved at `0o74` — the one universal content kind: prose words and metaschema names are both neems.
 - **prop** — a phonetic word with leading-capital marking, used for proper nouns. Same petal interpretation as neem; the kind distinguishes capitalization structurally rather than encoding it in the petals. Context-driven capitalization (sentence-initial, title-case) is applied by the parent stem at render time, not by the leaf — only proper-noun capitalization is structural. Props are marked even where position would capitalize anyway: prop-ness is semantic, not positional. The pronoun "I" is prop-marked — english's one prop pronoun.
 - **quant** — a numeric quantity. Petals encode (mantissa, exponent, precision) under a kind-specific layout. (Detailed design deferred.)
 - **enum** — an integer enumeration within a range. Petals encode (ordinal, range) under a kind-specific layout. (Detailed design deferred.)

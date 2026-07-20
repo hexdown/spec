@@ -16,13 +16,13 @@ the question was "how does the metaschema map to an arbor definition?" — and t
 | layout | blossom kind | petals are interpreted under the named layout |
 | **bloom** | **position kind** | cards grafted at this position parse under the schema with this hash |
 
-- and then: **an arbor is just the taproot card's trellis.** the document grammar is the transitive closure of bloom-linked schemas starting from the taproot's — taproot-schema → section-schema → passage, each card in the chain declaring its own governor by hash. there is no separate arbor grammar, no metarbor, no `arbor` root kind: the metaschema's root kinds reduce to **trellis alone** (`b000011` stays unassigned).
+- and then: **an arbor is just the taproot card's trellis.** the document grammar is the transitive closure of bloom-linked schemas starting from the taproot's — taproot-schema → section-schema → passage, each card in the chain declaring its own governor by hash. there is no separate arbor grammar, no metarbor, no `arbor` root kind: the metaschema's root kinds reduce to **trellis alone**.
 
 the back's `arbor-ref` becomes pure index under the two-coordinate pattern: the truth is the taproot face's schema bloom and its closure.
 
 ## position kinds
 
-- declared like any kind — `kind[name, bloom(#target-schema)]` — and drawing values in declaration order from the blossom range (they live only as petal values, in grafts and kids; they never head a node)
+- declared like any kind — `kind[name, bloom(#target-schema)]` — and drawing values in declaration order from the blossom seats, descending (they live only as petal values, in grafts and kids; they never head a node)
 - a bough kind's kids list names position kinds; structurally its children are reserved grafts, each holding one position-kind petal, resolved through the back's child-card-refs in face order
 - positional conventions (banner first, body last, exactly-one body) remain prose conventions for now — chapter 4 needed only sets; a constraint vocabulary is future work
 

@@ -22,6 +22,7 @@ The reference shelf — consult rather than read straight through:
 
 - [glossary.md](glossary.md) — every named concept, one paragraph each
 - [flora.md](flora.md) — the field guide to blossom and stem kinds
+- [glyphs.md](glyphs.md) — the sip value table: kind families, glyphs, kind and petal meanings
 
 Working state lives in [design/](design/): [roadmap.md](design/roadmap.md) (status and milestones), [corpus-demands.md](design/corpus-demands.md) (what the corpus asks of the trellises), and session documents such as [speech-examples.md](design/speech-examples.md). Design docs die by being absorbed into the spec proper.
 
