@@ -56,6 +56,7 @@ From the passage-trellis draft; content models provisional:
 - Whether `prop` should be a separate blossom kind or a structural flag on neem (current lean: separate kind, for structural cleanliness).
 - The exact unipoint / uniglyph design — bit layout within a unipoint's 6 petal children, what marker bits go where, whether uniglyph is variable-length or has internal substructure. (Detailed design deferred.)
 - Whether quant carries SI-unit information; if so, where (additional sip field, sibling node, trellis-level, ...?). (Deferred.)
+- Content dates and times — publication years, historical time, eras before 1970 and BCE: a quant layout or a date blossom with honest calendar apparatus (precision, ranges, eras). Unrelated to flush stamps, which clock orchard events only. (Deferred with quant.)
 - Exact bit allocation within quant (mantissa / exponent / precision split). (Deferred.)
 - Whether enum ranges are fixed by the trellis or carried per-blossom. (Deferred.)
 - Whether sentence-level stems should always wrap their content in phrase children (current lean: yes, for symmetry).

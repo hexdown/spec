@@ -18,12 +18,12 @@ Documents are not a separate stored layer. A *document* is the closure of (tapro
 
 ## Card identity
 
-Every card has a stable 64-bit **card-id**, packed as two fields:
+Every card has a stable 60-bit **card-id** — ten petals, split 6 + 4, so ids serialize as ordinary blossoms and still fit a 64-bit word with four bits spare (sips all the way down, decided 2026-07-20):
 
-| field         | bits | range                                        |
-|:--------------|:----:|:---------------------------------------------|
-| document-id   |  40  | up to ~1 trillion documents per orchard      |
-| local-id      |  24  | up to ~16 million cards per document         |
+| field         | bits | petals | range                                        |
+|:--------------|:----:|:----:|:---------------------------------------------|
+| document-id   |  36  |  6   | up to ~68 billion documents per orchard      |
+| local-id      |  24  |  4   | up to ~16 million cards per document         |
 
 The document-id is monotonically issued by the orchard. Document-id `0` is reserved (TBD — likely system / metadata purposes such as the orchard-level arbor and trellis registry). User documents are issued starting at `1`.
 
@@ -35,16 +35,18 @@ Within a document, local-ids count up from `0`. **The taproot of a document alwa
 
 ## Capacity and the archive-and-fork model
 
-The 40 + 24 bit split sizes a single orchard for human-generation scale, not for indefinite growth. At one million new documents per day, the 40-bit document-id space lasts approximately 3,000 years; at one thousand new documents per day, ~3 million years. Communities whose orchards approach the document-id limit are expected to **archive and fork**: the existing orchard becomes a read-only archive, and a new orchard is created for ongoing work. The spec deliberately does not try to scale a single orchard beyond this horizon — long-term continuity is achieved by chains of orchards rather than by ever-larger card-ids.
+The 36 + 24 bit split sizes a single orchard for human-generation scale, not for indefinite growth. At one million new documents per day, the 36-bit document-id space lasts approximately 190 years; at one thousand new documents per day, ~190,000 years. Communities whose orchards approach the document-id limit are expected to **archive and fork**: the existing orchard becomes a read-only archive, and a new orchard is created for ongoing work. The spec deliberately does not try to scale a single orchard beyond this horizon — long-term continuity is achieved by chains of orchards rather than by ever-larger card-ids.
 
 ## Flush ids
 
-Every flush has a 64-bit **flush-id**, packed as a stamp + counter:
+Every flush has a 60-bit **flush-id** — ten petals, split 6 + 4 like card-ids — packed as a stamp + counter:
 
-| field   | bits | range                                |
-|:--------|:----:|:-------------------------------------|
-| stamp   |  40  | seconds since epoch (~35,000 years)  |
-| counter |  24  | up to ~16M flushes/second            |
+| field   | bits | petals | range                                |
+|:--------|:----:|:----:|:-------------------------------------|
+| stamp   |  36  |  6   | unsigned seconds since the unix epoch (1970-01-01; runs to ~year 4147) |
+| counter |  24  |  4   | up to ~16M flushes/second            |
+
+The stamp is the orchard's clock, not the world's: it timestamps orchard *events*, which cannot precede the orchard, so it anchors at 1970 and runs forward — unsigned, keeping raw value order equal to time order. Dates *described by* content (publication years, historical time, eras before 1970) are content, carried by quant layouts in faces (decided 2026-07-20).
 
 Flushes are globally time-ordered across all gardeners in an orchard. The counter rolls per second so collisions are only possible at more than ~16 million flushes per second, which is well beyond any plausible orchard write rate.
 
@@ -52,7 +54,7 @@ Flushes are globally time-ordered across all gardeners in an orchard. The counte
 
 A card's back contains:
 
-- the **card-id** (40 + 24 packed)
+- the **card-id** (36 + 24 packed; ten petals)
 - the **trellis ref** the face conforms to (a card-id pointing to the trellis card; or one of the bootstrap trellises by reserved id)
 - the **face hash** — content hash of the face sip stream
 - the **arbor-ref** — *taproot cards only*; a stable-id index to the document's anchoring schema (the truth is the taproot face's schema bloom and its closure)
@@ -144,5 +146,5 @@ An arbor is the taproot's trellis plus its schema closure (2026-07-19). Branch t
 - Should the back also store a parent card-id, or is parent discoverable only by reverse-child-lookup? (No parent ref keeps the spec tight; reverse lookups can be served by indices.)
 - How are deletion / archival of individual documents handled in an append-only orchard?
 - Reserved document-id `0`: precise role (system metadata? orchard-level config? arbor and trellis registry?)
-- Sips all the way down? The 64-bit id shapes above (40 + 24) are not whole-sip: 64 bits is not a whole number of sips, and a 40-bit field is not a whole number of petals. Candidate resolution (2026-07-18, to loop back on): re-size both id kinds to 60 bits = 10 petals, split 6 + 4 — document-id 36 bits (~68B documents) + local-id 24 bits; stamp 36 bits (~2,200 years from a hexdown epoch, TBD) + counter 24 bits. Ids then serialize as ordinary ten-petal blossoms in backs and deltas, and still fit a 64-bit RAM word with four bits spare. Costs: the capacity story shrinks (still comfortably inside archive-and-fork); a hexdown epoch must be defined. Decide when the back/delta record encoding lands.
+- ~~Sips all the way down?~~ **decided 2026-07-20: yes** — both id kinds are 60 bits = ten petals, split 6 + 4, serializing as ordinary blossoms (tables above); the stamp anchors at the unix epoch, unsigned.
 - The face's schema node names its governing schema by content hash, while the back carries a `trellis_ref` card-id. Working pattern (2026-07-18, to loop back on): these are two coordinate systems joined by flush history — faces are indexed by content hash, backs give cards stable ids, and each flush concretely re-points a stable id at a new content hash. The full schema-space design (see [encoding.md](encoding.md) open questions) remains open.
