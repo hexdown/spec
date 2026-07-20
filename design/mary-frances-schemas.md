@@ -40,7 +40,10 @@ trellis
   neem: banner
   crowns: [title]
   kind  neem: title   kids: [neem prop quant]
-  kind  neem: quant   layout: numeric        ← first quant declaration (chapter numbers)
+  kind  neem: prop    layout: phoneme        ← prop is conventional, not reserved:
+  kind  neem: quant   layout: numeric           any schema admitting it must declare it
+                                               (latent bug caught by hwatu seeds, 2026-07-20;
+                                                the conventional seats land: prop ^, quant =)
 ```
 
 ### section (branch, ~250 sips)

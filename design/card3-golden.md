@@ -40,11 +40,13 @@ as values:
 60 6 · 12 10 32 63 12 10 32        neem, 7 petals: c a w - c a w
 ```
 
-as glyphs, one unbroken stream:
+as glyphs, one unbroken stream — the schema bloom resolved to its real petals by hwatu's seed chain, 2026-07-20:
 
 ```
-01*-⟨#passage⟩12604090·6caw-caw2094^6feather^3flop·6cleared·2his·5throat604090·6caw-caw
+01*-s-sβi=Ω=3v&9-7vb6ys3!fψfp8&λ*-mψzu0ψ=-b4Σ4pΞ6xk=&%θxΩbt3λ*@^aβφl12604090·6caw-caw2094^6feather^3flop·6cleared·2his·5throat604090·6caw-caw
 ```
+
+(reading the opener: `01` is the schema node and its count, `*-` is the bloom kind and its count-of-64, then the 64 hash petals follow. the bloom is blake2b-384 over the passage schema card's canonical 192 slurp bytes, pinned in hwatu's `tests/test_seeds.py`.)
 
 read it: the words are *visible* — `caw-caw`, `feather`, `flop`, `cleared`, `his`, `throat` — each opened by its interpunct (neem, the roman word-separator returned to duty) or caret (prop on its conventional first-blossom seat, `0o73` = `^`, so the annotation notation `^feather ^flop` turns out to have been the serialization in disguise). counts render as digits; `01*-` opens the card; `604090` is a turn folding down through exclamation to phrase.
 
