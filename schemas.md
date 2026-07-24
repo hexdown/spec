@@ -46,7 +46,7 @@ A taproot face is a bough rooted at the `taproot` kind with 1-64 graft children,
 - the **last** graft names the document's body root (omnibus | book | chapter | section | passage, depending on document size) — every taproot has exactly one body root, and it is always the final child
 - the **0-63 preceding** grafts each name a kind of meta card (at, dex, status, etc.)
 
-Front matter first, body last — the same positional idiom the branch trellises use (optional banner first, body children after), and the schema node itself follows (hash bloom first, document root last). The back's `child-card-refs` resolves each graft, in face order, to a card-id.
+Front matter first, body last — the same positional idiom the branch trellises use (optional banner first, body children after), and the schema node itself follows (hash bloom first, document root last). The back resolves each graft, in face order, to a child card's ring.
 
 The arbor is anchored by the taproot's own trellis — named by content hash in its face's schema node, like every card's governor. The back's **arbor-ref** (see [data-model.md](data-model.md)) is a stable-id index for catalog-layer lookups; the face's bloom and its closure are the truth.
 

@@ -13,12 +13,12 @@ what does a brand-new orchard contain, card by card and record by record? workin
 
 no `backs/` table on disk, no plot-definition schema needed, no bootstrap configuration record. the north star **everything is a card** stands — deltas are destined to be card-like faces (plan phase 4: sips all the way down) — but the mutable projections were never cards, and now nothing pretends they are.
 
-## bloom names a version; card-id names a lineage
+## bloom names a version; ring names a lineage
 
 the two references have different referents, not redundant ones:
 
 - a **bloom names a version** — immutable, exact. a face's schema node pins the schema *content* it was written under; its meaning can never drift. faces speak only blooms.
-- a **card-id names a lineage** — "the prose arbor, as it evolves." deltas need a stable name that survives the bloom changing. the log speaks lineages.
+- a **ring names a lineage** — "the prose arbor, as it evolves." deltas need a stable name that survives the bloom changing. the log speaks lineages.
 
 a back's schema reference is the distilled answer to "which lineage governs this card" — a projection, not a stored index.
 
@@ -28,12 +28,12 @@ a back's schema reference is the distilled answer to "which lineage governs this
 
 ## tills and flushes: presupposition and operation
 
-- a **flush presupposes a document** — a card-id space, a plot, a schema to parse under.
+- a **flush presupposes a document** — a ring space, a plot, a schema to parse under.
 - a **till creates presuppositions** — founds the orchard, creates plots, registers and advances schema lineages, grants gardener permissions.
 
-the first record in any orchard is therefore a till; folding the two streams would just reintroduce the split as a special genesis-kind flush. tills do not track state across card-ids the way flushes do — their referent is the orchard, not a card.
+the first record in any orchard is therefore a till; folding the two streams would just reintroduce the split as a special genesis-kind flush. tills do not track state across rings the way flushes do — their referent is the orchard, not a card.
 
-both tables are **totally ordered append-only logs**: stamp-ids (stamp + counter) carry the order intrinsically, so there are no head pointers to maintain — the head of a log is its last record. consequences:
+both tables are **totally ordered append-only logs**: stamp rings (stamp + counter) carry the order intrinsically, so there are no head pointers to maintain — the head of a log is its last record. consequences:
 
 - **revert is an append** — a new delta stating the restored state; history never rewrites (this is what append-only durability already promised)
 - **navigation is a projection** — per-document delta chains, per-lineage schema histories, corpus-wide views are lenses built during replay, not structure stored in the log. one durable shape, many lenses.

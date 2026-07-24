@@ -119,7 +119,7 @@ The schema-card grammar, settled by the hand-encoded passage schema (2026-07-19;
 
 Dynamic loading: when a parser opens a card, it reads the face's schema node, resolves the bloom's hash to a schema card, parses that card under the metaschema (or under its own declared schema, recursively, bottoming out at the null hash), and then interprets the face under it.
 
-Working choice for the content hash: blake2b-384 — exactly 64 petals, one full bloom. TBD to mandate. (A word-sized 64-bit hash was considered and declined: birthday collisions arrive near 2^32 faces — within reach of a large orchard — and intentional collisions cost only 2^32 work, trivial for an adversary. Word-sized speed lives in card-ids and indices instead; implementations may key internal maps on a 64-bit prefix of the hash.)
+Working choice for the content hash: blake2b-384 — exactly 64 petals, one full bloom. TBD to mandate. (A word-sized 64-bit hash was considered and declined: birthday collisions arrive near 2^32 faces — within reach of a large orchard — and intentional collisions cost only 2^32 work, trivial for an adversary. Word-sized speed lives in rings and indices instead; implementations may key internal maps on a 64-bit prefix of the hash.)
 
 ## On-disk representation
 
