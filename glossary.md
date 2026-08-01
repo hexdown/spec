@@ -6,9 +6,9 @@ Named concepts in hexdown, in rough dependency order — encoding terms first, t
 
 **sip** — the basic 6-bit data unit of hexdown encoding, one of 64 possible values. Any 6 bits of a hexdown stream is a sip; sips serve different roles depending on their position in the parse — kind glyph at the start of an inner node, count, petal or graft at a leaf, or null marker. Analogous to a byte: a sip is a generic data unit whose meaning is determined by context.
 
-**petal** — a sip at a leaf position inside a blossom-family node; every leaf of a face is a petal. Its interpretation depends on its parent's kind — in a *neem* or *prop* a phoneme; in a *quant* a digit, mantissa, exponent, or precision marker; in an *enum* an ordinal or range marker; in a *unipoint* a bit-group of a unicode codepoint; in a *graft* the kind of a grafted child card; in a *bloom* six bits of a content hash. Content petals appear only in leaf trellises.
+**petal** — a sip at a leaf position inside a blossom-family node; every leaf of a face is a petal. Its interpretation depends on its parent's kind — in a *neem* or *prop* a phoneme; in a *quant* a digit, mantissa, exponent, or precision marker; in an *enum* an ordinal or range marker; in a *unipoint* a bit-group of a unicode codepoint; in a *graft* the kind of a grafted child card; in a *bloom* six bits of a content hash. Content petals appear only in leaf cards.
 
-**graft** — a blossom-family node inside a bough; the site where a child card is joined to its parent branch card. Holds exactly one petal naming the kind of child card grafted at that position; the card's back resolves each graft, in face order, to a child card's ring via its ordered child-ring list. Grafts are the structural counterpart of content blossoms (blossoms bottom out leaf faces with rendered petals; grafts bottom out branch faces with reference petals), and appear only in branch trellises.
+**graft** — a blossom-family node inside a bough; the site where a child card is joined to its parent branch card. Holds exactly one petal naming the kind of child card grafted at that position; the card's back resolves each graft, in face order, to a child card's ring via its ordered child-ring list. Grafts are the structural counterpart of content blossoms (blossoms bottom out leaf faces with rendered petals; grafts bottom out branch faces with reference petals), and appear only in branch cards.
 
 **beat** — the null sip (value `0o77`, all bits high, rendered as `-`). The pad node's kind, the petal of intentional absence (a bloom of 64 beats is the null hash), and collision-resolution padding at the start of a content-addressed sip sequence.
 
@@ -24,13 +24,13 @@ Named concepts in hexdown, in rough dependency order — encoding terms first, t
 
 The node classes form a top-down hierarchy: bough (in branch cards), stem and blossom (in leaf cards), graft (inside boughs), and petal (the sole leaf form, inside blossom-family nodes). Structurally every kind belongs to one of four families by its leading bits: stem-family kinds hold nodes, bough-family kinds hold only grafts, blossom-family kinds hold petals, and the null kind is the single-sip pad (see [glyphs.md](glyphs.md)). "Branch" is a card-level word only. See [data-model.md](data-model.md) for the card and node classes and [flora.md](flora.md) for the kinds within each.
 
-**bough** — the top-level inner node of a branch trellis. Its direct children are grafts — single sips whose values are kind glyphs naming the kind of child card at each position. The card's back resolves each graft position to a child card's ring. Boughs hold no rendered content directly; all content lives in leaf cards.
+**bough** — the top-level inner node of a branch card's face. Its direct children are grafts — single sips whose values are kind glyphs naming the kind of child card at each position. The card's back resolves each graft position to a child card's ring. Boughs hold no rendered content directly; all content lives in leaf cards.
 
-**stem** — an inner document node found in leaf trellises that combines blossoms or other stems into larger structures. Examples: a *span* combines blossoms into a compound word; a *phrase* combines blossoms and spans into a thought; a *statement* combines phrases into a sentence with first-letter capitalization and a period. Stems carry rendering and contextual information that in markdown is conveyed by surrounding characters (punctuation, formatting cues, capitalization rules).
+**stem** — an inner document node found in leaf cards that combines blossoms or other stems into larger structures. Examples: a *span* combines blossoms into a compound word; a *phrase* combines blossoms and spans into a thought; a *statement* combines phrases into a sentence with first-letter capitalization and a period. Stems carry rendering and contextual information that in markdown is conveyed by surrounding characters (punctuation, formatting cues, capitalization rules).
 
-**blossom** — an inner document node whose direct children are petals; the smallest named word-scale unit in a document tree. Different blossom kinds (neem, prop, quant, enum, uniglyph) interpret their petal sequences differently. Blossoms only appear in leaf trellises.
+**blossom** — an inner document node whose direct children are petals; the smallest named word-scale unit in a document tree. Different blossom kinds (neem, prop, quant, enum, uniglyph) interpret their petal sequences differently. Blossoms only appear in leaf cards.
 
-**crown** — a kind eligible to stand at a leaf card's card root; in horticulture the crown is where stem meets root — the thing a gardener plants. Each leaf trellis declares its crown kinds (the passage trellis's crowns are paragraph, verse, and list); boughs are the branch-side counterpart and are card roots by definition.
+**crown** — a kind eligible to stand at a leaf card's card root; in horticulture the crown is where stem meets root — the thing a gardener plants. Each leaf schema declares its crown kinds (the passage schema's crowns are paragraph, verse, and list); boughs are the branch-side counterpart and are card roots by definition.
 
 **root** — the entry node of a sip-encoded tree. The **card root** is the content entry node of a card's face — the second child of its schema node (a bough in a branch card, a stem or blossom in a leaf card). The **document root** is specifically the card root of the document's taproot card. The **back-root** is the entry node of the back's metaschema record. "Root" alone is context-dependent; the distinct *taproot* concept refers to a card playing the entry-point role for a whole document.
 
@@ -38,25 +38,29 @@ The node classes form a top-down hierarchy: bough (in branch cards), stem and bl
 
 **orchard** — the totality of documents and history managed by a single hexdown installation. The hexdown-native term for what is sometimes called a *corpus* in prose. An orchard contains plots; documents within different plots may be tended by different gardeners with different permissions.
 
-**plot** — a collection of documents within an orchard, grouped by intent and by the arbor they conform to. For example, a "Direct Messages" plot containing posts, or a "Cases" plot containing case study reports. Plots are the unit gardener permissions attach to.
+**plot** — a collection of documents within an orchard, grouped by intent and by the arbor they conform to. For example, a "Direct Messages" plot containing posts, or a "Cases" plot containing case study reports. Plots are the unit gardener permissions attach to. A plot is declared by a till record and lives as a projection — a name, a permission surface, and a lens over foraging; how much more representation a plot wants is open (2026-07-20).
 
-**arbor** — the schema closure a document grows under: the taproot card's trellis together with every schema reachable from it through bloom references. An arbor is not a second kind of schema object — it is the view of the schema grove from a taproot (2026-07-19). The core arbors (prose, graph, table) are each anchored by a taproot trellis card; custom arbors are grown the same way, and every closure is content-addressed by construction.
+**arbor** — the schema closure a document grows under: the taproot card's schema together with every schema reachable from it through bloom references. An arbor is not a second kind of schema object — it is the view of the schema grove from a taproot (2026-07-19). The core arbors (prose, graph, table) are each anchored by a taproot schema card; custom arbors are grown the same way, and every closure is content-addressed by construction.
 
-**trellis** — a schema defining the valid document-node tree within a single card's face; the one grain of schema hexdown has. A trellis is itself a hexdown card, parsed under the hardcoded metaschema and marked by the null hash. Trellises come in two flavors: a **branch trellis** declares position kinds, each naming the schema of the cards grafted there by content hash (no rendered content); a **leaf trellis** declares content kinds selected from the flora (rendered content).
+**schema** — a card declaring the valid document-node tree within a single card's face; the one grain of document grammar hexdown has (*schema* ratified as the headword 2026-07-20, retiring *trellis*). A schema is itself a hexdown card, parsed under the hardcoded metaschema and marked by the null hash. Schemas come in two flavors: a **branch schema** declares position kinds, each naming the schema of the cards grafted there by content hash (no rendered content); a **leaf schema** declares content kinds selected from the flora (rendered content) and the crowns eligible to root them. A document's taproot uses a **taproot schema** — a branch schema — whose closure is the document's arbor.
 
-**metaschema** — the hardcoded grammar of schema cards: the schema that defines all other schemas, known by heart by every parser. A schema card declares the null hash in its schema node, and parsers may verify stored schema cards against the grammar they carry. (The earlier *metatrellis*/*metarbor* pair first unified into one metaschema and then the arbor half dissolved entirely — an arbor is a taproot's trellis, and *trellis* is the metaschema's sole root kind, 2026-07-19.)
+**trellis** — retired vocabulary (2026-07-20) in favor of **schema**; kept on the shelf until a need for a second schema word reappears.
 
-**document** — a tree of cards rooted at a taproot card, conforming to the arbor anchored at that taproot's trellis. A document has no separate stored existence: it is the closure of (taproot card + all cards reachable through child references on backs). The document's id is its taproot's ring.
+**metaschema** — the hardcoded grammar of schema cards: the schema that defines all other schemas, known by heart by every parser. A schema card declares the null hash in its schema node, and parsers may verify stored schema cards against the grammar they carry. (The earlier *metatrellis*/*metarbor* pair first unified into one metaschema and then the arbor half dissolved entirely — an arbor is a taproot's schema closure, 2026-07-19. The metaschema's sole root kind is the **habit**, respelled from the landed *trellis*, 2026-08-01.)
 
-**taproot** — the card at the entry point of a document tree; the document's anchor. There is exactly one taproot per document, and the taproot's ring serves as the document's id. Every taproot card uses a **taproot trellis** (a branch trellis), so any system scanning an orchard can recognize and enumerate documents uniformly. The taproot's trellis anchors the document's arbor; the back's **arbor-ref**, where kept, is an index in ring space (the truth is the face's schema bloom and its closure).
+**habit** — the metaschema's root kind (`0o01`, the first stem): the node that *is* a schema declaration, standing at every schema card's card root with the schema's name-neem, its crowns, and its kind declarations as kids. Named for botanical growth habit — the characteristic form in which a species grows — which is what a schema declares for its card kind's faces (ratified 2026-08-01; kind values unchanged, so sealed bytes stand).
 
-**card** — a single node in a document tree, composed of a face and a back. Cards have stable rings; faces are content-addressed by hash, so unchanged content is shared rather than duplicated. Cards come in three classes by role: **taproot cards** are document anchors (one per document); **branch cards** organize the document tree without holding rendered content; **leaf cards** hold actual content. A card's class is determined by which trellis it uses (taproot trellis, a branch trellis, or a leaf trellis).
+**document** — a tree of cards rooted at a taproot card, conforming to the arbor anchored at that taproot's schema. A document has no separate stored existence: it is the closure of (taproot card + all cards reachable through child references on backs). The document's id is its taproot's stead ring.
 
-**ring** — a stable 60-bit hexdown id: ten petals split 6 + 4, sized to serialize as an ordinary blossom and to fit a 64-bit word with four bits spare. Every ring records the time and place of a creation, read the way tree rings are read (adopted 2026-07-20, replacing *card-id*, *flush-id*, and *stamp-id*). Two species: a **card ring** is document-id (36 bits: which trunk) + local-id (24 bits: the growth step; every taproot's is 0); a **stamp ring** keys the delta logs — stamp (36 bits: seconds since the hexdown epoch) + counter (24 bits: order within the second) — with tills and flushes each keeping their own table's ring space.
+**taproot** — the card at the entry point of a document tree; the document's anchor. There is exactly one taproot per document, and the taproot's ring serves as the document's id. Every taproot card uses a **taproot schema** (a branch schema), so any system scanning an orchard can recognize and enumerate documents uniformly. The taproot's schema anchors the document's arbor — the face's schema bloom and its closure are the truth.
 
-**face** — the content side of a card. A tree of nodes encoded as a flat sequence of sips, parsed under the card's trellis. In a branch card the face is a bough over grafts; in a leaf card the face is stems over blossoms over petals. Faces are content-addressed by hash.
+**card** — a single node in a document tree, composed of a face and a back. Cards are named by stead rings; faces are content-addressed by hash, so unchanged content is shared rather than duplicated. Cards come in three classes by role: **taproot cards** are document anchors (one per document); **branch cards** organize the document tree without holding rendered content; **leaf cards** hold actual content. A card's class is determined by which schema it uses (a taproot schema, another branch schema, or a leaf schema).
 
-**back** — the catalog side of a card. Holds the card's ring, the trellis it conforms to, the content hash of its face, the **arbor-ref** (taproot cards only; a stable-id index to the document's anchoring schema — the face's schema bloom is the truth), and ordered references to its child cards.
+**ring** — a 60-bit hexdown id: ten petals split 6 + 4, sized to serialize as an ordinary blossom and to fit a 64-bit word with four bits spare. Every ring records the time and place of a creation, read the way tree rings are read (adopted 2026-07-20, replacing *card-id*, *flush-id*, and *stamp-id*). Species names carry tempo; component names carry structure (2026-08-01). Two species: a **stead ring** names a card — trunk (36 bits: which document) + step (24 bits: the growth step; every taproot's is 0); a **stamp ring** keys the delta logs — stamp (36 bits: seconds since the hexdown epoch) + counter (24 bits: order within the second) — with tills and flushes each keeping their own table's ring space. A stead ring is *held* — grafts point by it, and revising a card never disturbs it; a stamp ring is *laid down* — one mark per event, permanent in the log but never held as a living referent. Stable identity over changing content, a move learned from [jj](https://github.com/jj-vcs/jj).
+
+**face** — the content side of a card. A tree of nodes encoded as a flat sequence of sips, parsed under the card's schema. In a branch card the face is a bough over grafts; in a leaf card the face is stems over blossoms over petals. Faces are content-addressed by hash.
+
+**back** — the catalog side of a card, distilled from the delta log rather than stored (lean back, 2026-07-20): the face's bloom plus ordered child rings — the last shoot at the card's ring, verbatim. Everything else is arithmetic or a sibling projection: a card's document is its ring's trunk, the document's plot is bound by the sow at its taproot, and the governing schema is named by the face's own schema node.
 
 **sheaf** — a query result set. A collection of cards returned by a forage operation, possibly with associated relevance scores or position context.
 
@@ -66,17 +70,23 @@ The node classes form a top-down hierarchy: bough (in branch cards), stem and bl
 
 ## Change
 
-**till** — a delta describing structural changes to an orchard: creating plots, publishing or versioning arbors, granting permissions to gardeners. The structural counterpart of flush.
+**till** — a delta record that creates presuppositions; its referent is the orchard: founding it, breaking ground on plots, staking schema lineages, and (future) granting permissions to gardeners. The structural counterpart of flush; the first record in any orchard is a till.
 
-**flush** — a delta describing content changes to a card: splicing new content into its face, updating the child card references on its back. The content counterpart of till.
+**flush** — a delta record that operates within documents: sowing a taproot, shooting growth at a card's ring. Each record carries a face bloom and the child rings its grafts need. The content counterpart of till.
+
+**found** — the till record kind that opens an orchard, naming it. Every orchard's log begins with its founding.
+
+**stake** — the till record kind that ties a schema lineage's ring to its current taproot bloom; re-staking advances the lineage. In the garden a stake is both the support a growing plant is tied to and the marker naming what is planted where — both meant. Bloom names a version; ring names a lineage.
+
+**shoot** — the flush record kind recording growth at a stead ring: face bloom, then child rings in graft order. Upsert semantics: the first shoot at a fresh ring births a card, a later shoot at the same ring replaces its face; the back projection is the last shoot per ring, verbatim. The authoring verb *splice* emits shoots.
 
 ## Operations
 
 **plot** *(verb)* — to initiate a new plot for a gardener. Distinct from the noun "plot"; named for breaking ground on new garden plot.
 
-**sow** — to initiate a new document root within a plot. Produces a new taproot card and registers it as a document entry point.
+**sow** — to plant a new document within a plot; also the flush record kind that records it: taproot ring, plot ring, face bloom, and the taproot's child rings.
 
-**splice** — to modify a document by inserting, replacing, or removing document nodes within a card. Produces a new card-version (a new face and back) and a flush delta.
+**splice** — to modify a document by inserting, replacing, or removing document nodes within a card. An api verb, not a record kind: a splice edits a face tree and emits **shoot** records ([deltas.md](deltas.md)).
 
 **forage** — to query an orchard for a sheaf of cards. Queries may be by document id and path, by metadata on the card or its containing document, by face text content, or by embedding vector similarity.
 
@@ -84,4 +94,5 @@ The node classes form a top-down hierarchy: bough (in branch cards), stem and bl
 
 ## Open questions
 
-- Naming for the operation that publishes a new arbor or a new arbor version — currently subsumed under "till" but may deserve a verb of its own.
+- ~~Naming for the operation that publishes a new arbor version~~ — answered 2026-07-20: **stake**.
+- ~~Whether the metaschema's root kind name respells to follow the *schema* headword~~ — answered 2026-08-01: **habit**, the botanical growth form; renamed in code (kind values unchanged, sealed bytes stand).

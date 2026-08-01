@@ -106,7 +106,7 @@ The schema-card grammar, settled by the hand-encoded passage schema (2026-07-19;
 
 | value | kind | family | children |
 |:--|:--|:--|:--|
-| `0o01` | trellis | stem | name-neem, crowns, kind* — the sole root kind of schema cards |
+| `0o01` | habit | stem | name-neem, crowns, kind* — the sole root kind of schema cards |
 | `0o02` | kind | stem | name-neem, spec |
 | `0o73` | kids | blossom | value petals: the acceptable child kinds |
 | `0o72` | crowns | blossom | value petals: the card-root-eligible kinds |
@@ -129,9 +129,9 @@ The hexdown spec is *bit-stream-agnostic*: a hexdown face is a sequence of sips,
 - byte-aligned binary (1 sip per byte, simple but 25% overhead)
 - utf-8 strings using the visible glyph mapping (1 sip per 1-4 bytes, human-readable but high overhead — pentabased's bootstrapping choice)
 
-Whatever the packing, block sizes are chosen so sips align evenly with the containing structure — for example 32 sips = 192 bits = three 64-bit words, the 24-byte increment hwatu's slurps use.
+Whatever the packing, block sizes are chosen so sips align evenly with the containing structure — for example 32 sips = 192 bits = three 64-bit words, the 24-byte increment slurps use.
 
-The choice does not affect the semantics described elsewhere in this spec; it affects only the bytes on disk or on the wire.
+One packing is canonical: the stored form of a sip sequence is the bit-packed **slurp** ([store.md](store.md)), and content hashes are computed over slurp bytes — the bloom names the canonical bytes, not an abstract sip sequence. Other packings are working and transport forms; they affect neither semantics nor identity.
 
 ## Open questions
 
@@ -141,7 +141,7 @@ The choice does not affect the semantics described elsewhere in this spec; it af
 - ~~How intentional absence is marked~~ resolved 2026-07-19: a pad node in the child slot (see the pad rule above); beat petals remain the within-blossom absence (the null hash)
 - ~~The kind node's representations~~ resolved 2026-07-19 by the hand-encoded passage schema: positional values, two-child kind nodes, kids/crowns as value-petal blossoms ([design/passage-schema.md](design/passage-schema.md))
 - ~~The shape of the schema space~~ resolved in shape 2026-07-19: taproot-anchored closures of bloom-linked trellises, one card per schema ([design/mary-frances-schemas.md](design/mary-frances-schemas.md)); still open within it: cross-schema names (is a position-kind's local name checked against the target schema's own name?) and [flora.md](flora.md) as the human-facing index of kind names
-- ~~metatrellis / metarbor~~ resolved 2026-07-19: one metaschema, one root kind — trellis; the arbor dissolved into the taproot's trellis
+- ~~metatrellis / metarbor~~ resolved 2026-07-19: one metaschema, one root kind — the **habit** (spelled *trellis* when resolved; respelled 2026-08-01); the arbor dissolved into the taproot's schema closure
 - ~~Face hash vs back trellis_ref~~ working pattern recorded in [data-model.md](data-model.md): two coordinate systems joined by flush history — faces content-addressed, backs stable-id indexes
 - The self-reference sentinel for recursive schema structures (philetus leans: reject recursion, keep explicit levels)
 - The constraint vocabulary: banner-first, body-last, exactly-one-body as machine-checkable rules rather than prose conventions

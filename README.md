@@ -14,9 +14,10 @@ Files and sections are named for ideas a reader already carries, so the spec can
 
 - [vision.md](vision.md) — broader goals and commitments
 - [data-model.md](data-model.md) — orchards, plots, cards, faces and backs; node classes; card scale
-- [schemas.md](schemas.md) — the shipped arbors and trellises
+- [schemas.md](schemas.md) — the shipped arbors and schemas
 - [encoding.md](encoding.md) — sips, glyphs, metaschema rules, bootstrap grammars, on-disk notes
-- [deltas.md](deltas.md) — till and flush delta semantics
+- [deltas.md](deltas.md) — the two delta logs: record kinds, replay, and projections
+- [store.md](store.md) — the two-level architecture: the store protocol below, the orchard api above
 
 The reference shelf — consult rather than read straight through:
 

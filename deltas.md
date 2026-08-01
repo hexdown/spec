@@ -1,53 +1,84 @@
 # Deltas
 
-Hexdown represents change as deltas applied to an orchard. The delta history of an orchard is append-only — every delta is a first-class, immutable object. Backs and other derived structures (indices, embedding caches) are *ephemeral projections* of the delta history; they are updated in place as deltas are applied but are never the source of truth. Any past state of the orchard is reachable by walking the delta history.
+Hexdown represents change as two append-only logs of **delta records**. Everything durable in an orchard is faces plus these logs; everything mutable — backs, the plot table, the schema registry, the id allocator — is an ephemeral projection distilled by replaying them ([data-model.md](data-model.md) describes the lean back). The log is the history: any past state of the orchard is a replay of a prefix, revert is an append, and no record is ever rewritten.
 
 Two kinds of delta:
 
-- **till** — structural changes to the orchard, its plots, and its arbors
-- **flush** — content changes to cards (face and back)
+- **till** — creates presuppositions. Its referent is the orchard: founding it, breaking ground on plots, staking schema lineages to their taproot blooms, and (future, unsketched) welcoming gardeners and granting permissions.
+- **flush** — operates within documents. It presupposes what tills create: a ring space, a plot, a schema to parse under. Flushes sow taproots and shoot growth at cards.
 
-## Till deltas
+The first record in any orchard is therefore a till — its founding.
 
-TBD. Candidate till operations:
+## Order and replay
 
-- create a plot in the orchard
-- publish a new arbor
-- publish a new version of an existing arbor
-- grant or revoke a gardener's permission on a plot
-- archive a plot
+Both logs are keyed by stamp rings and **totally ordered**: replay merges them by stamp, tills before flushes on equal stamps (presuppositions precede operations). There are no head pointers to maintain — the head of a log is its last record. Consequences:
 
-Till deltas mutate the structure that documents live within, but do not mutate the content of documents themselves.
+- **Revert is an append** — a new record stating the restored state; history never rewrites.
+- **Navigation is a projection** — per-document chains, per-lineage schema histories, and corpus-wide views are lenses built during replay, not structure stored in the log. One durable shape, many lenses.
+- **Merging is out of scope** — a single orchard's log is linear. DAGs arrive only if orchards merge, and the archive-and-fork stance says they don't ([data-model.md](data-model.md)).
 
-## Flush deltas
+Replay dispatches on kind *names*, and unknown kinds skip gracefully — the delta vocabulary can grow without stranding older parsers.
 
-TBD. Candidate flush operations:
+## Three grounded levels
 
-- splice document nodes into a card's face
-- replace document nodes in a card's face
-- remove document nodes from a card's face
-- update the child-card references on a card's back
-- create a new card
+Delta records are ordinary faces — no new metastructure, no reserved kinds. The grounding avoids circularity (you must not need to replay the log to learn how to parse the log):
 
-Flushes are the authoritative record of card changes. A card's back is an ephemeral projection of the flush history — it represents the *current* state of that card, updated in place when a flush is applied, but it is not the source of truth. Any past state of a card is reconstructible by replaying flushes from the current back backward.
+1. **The metaschema** — hardcoded grammar, known by heart by every parser; schema cards mark themselves with the null hash.
+2. **The till and flush schemas** — ordinary schema cards living in implementation code (corpus schemas live with their corpus; protocol schemas live in the library), sealed once at genesis and seeded as faces into the orchard. **Coded, not staked**: their authority comes from the spec's vocabulary, never from the log. Published reference blooms are regression fixtures, not protocol constants.
+3. **Delta records** — faces whose schema nodes carry those genesis blooms. Resolution meets no loop: a bloom resolves through the hash-keyed `faces` table (not the log), and the schema face parses under the hardcoded metaschema.
 
-This implies a discipline: **every flush records both the new and the prior values of every back field that changes**. A flush that doesn't capture the full before-and-after for its mutations would not be a complete record, and the orchard could not be reconstructed from incomplete flushes. The spec requires flushes to be lossless in this sense.
+Delta records are *events keyed by stamp rings*, not values keyed by hash — two identical sows at different moments are different events. Their slurps therefore carry **no collision arena**: leading pads exist only to dodge hash collisions ([store.md](store.md)).
 
-Faces, by contrast, are content-addressed. When a flush changes a card's face, the new face is stored under a new hash alongside the prior face; faces are never mutated in place. Whether prior faces are eventually garbage-collected once no current back references them is a separate question (see open questions).
+## Record kinds
 
-## Delta tree
+One act per record; the act's kind wears the crown. Children are positional, identification first:
 
-TBD — the structure of the delta tree itself:
+| log | kind | children |
+|:--|:--|:--|
+| till | **found** | the orchard's name (neem words) |
+| till | **plot** | the plot's name (its ring is replay-assigned from document 0's counter) |
+| till | **stake** | lineage ring, taproot bloom |
+| flush | **sow** | taproot ring, plot ring, face bloom, then the taproot's child rings |
+| flush | **shoot** | stead ring, face bloom, then child rings in graft order |
 
-- whether deltas form a flat per-gardener timeline or a branched tree
-- whether the delta tree is orchard-wide or per-plot
-- how concurrent edits from multiple gardeners merge
-- how undo and history navigation map onto the delta tree
+- **found** opens the orchard and names it.
+- **plot** breaks ground: a plot is a name in the log and a projection thereafter.
+- **stake** ties a schema lineage's ring to its current taproot bloom; re-staking advances the lineage. In the garden a stake is both the support a growing plant is tied to and the marker naming what is planted where — both meant.
+- **sow** plants a document: its taproot ring, the plot it belongs to, its face, and the taproot's child rings.
+- **shoot** records growth at a ring, with upsert semantics: the first shoot at a fresh ring births a card, a later shoot at the same ring replaces its face — creation versus revision falls out of log order. The back projection is the last shoot per ring, verbatim.
+
+**Child rings pair 1:1 with grafts, and with nothing else.** Stem children are the card's own body, not references, so they never consume rings; a leaf card's record carries no child rings. Since the graft count is derivable from the face, replay validates every record against its face structurally — ring-list length must equal graft count.
+
+## Api verbs and record kinds
+
+Different vocabularies. **Splice** — the authoring operation that edits a face tree — is an api verb; it *emits* shoots. The record kinds above are the at-rest truth; the api verbs are ergonomics over them (see the Operations section of [glossary.md](glossary.md)).
+
+## Faces are inert; deltas are the refs
+
+The git-object pattern: faces are content-addressed values with no independent liveness, and deltas are the references that make them live. Writing a face is not itself delta-tracked — the sow or shoot that references its bloom is the event. Orphaned faces can therefore accumulate (see open questions).
+
+## Revision propagation
+
+- **Documents are ring-linked.** Grafts resolve by ring and rings are stable, so replacing a card's face — a shoot at its same ring — touches no ancestor. Revision climbs nowhere.
+- **Schemas are bloom-linked.** Position kinds name child schemas by content hash, so an interior fix re-seals the chain above it and re-stakes the taproot. Revision always climbs.
+
+This is the version/lineage split expressing itself structurally: schema identity is content, card identity is lineage — each reference propagates exactly as much as its meaning requires. **Bloom names a version; ring names a lineage.** Faces speak only blooms; the log speaks lineages; backs are the distilled join.
+
+## Projections
+
+Replay distills the mutable state:
+
+- **backs** — the last shoot per ring: face bloom plus child rings
+- **the plot table** — plot ring → name
+- **the schema registry** — lineage ring → current taproot bloom; taproot lineages only, since the taproot bloom versions the whole arbor
+- **the id allocator** — every record is in the log, so next-document and next-step fall out of the same replay
 
 ## Open questions
 
-- How fine-grained should flush deltas be — one delta per splice, or one delta per session?
-- How do till deltas interact with cards that conform to the modified arbor?
-- Is there a third kind of delta for embedding-space operations (registering a space, indexing a card)?
-- Periodic immutable back snapshots as a performance optimization for deep history queries — flushes alone suffice for reconstruction but may be slow if a card has thousands of prior flushes.
-- Face garbage collection: when (if ever) is a face removed once no current back references it? An orchard archive needs to preserve every face ever referenced by any back ever in flush history.
+- Rollback ergonomics: revert-by-append is the mechanism; what a reverting record carries (full restored state vs a reference to a prior record) is unspecified.
+- One act per record: does it survive multi-card operations (a sow that also shoots the document's first branch)?
+- Gardener-welcoming tills (identity, permissions): unsketched.
+- Orphaned faces: an orchard archive must preserve every face any record ever referenced; whether never-referenced faces are ever collected is future work.
+- Embedding-space deltas (registering a space, indexing a card): still speculative.
+- Deep history at scale: replay from genesis is the truth; whether long-lived orchards want periodic projection snapshots as a pure optimization.
+- Order and replay under real use: the linear total order and the no-merge stance are a working posture, not a settled conviction (philetus, 2026-08-01) — keep implementing, watch how it develops, and revisit whether any of git's DAG complexity is actually needed. Reference point: jj rather than git — stable change ids over evolving commits, plus an operation log, rhyme with rings over blooms plus the delta logs; the hope is that the ring/bloom split keeps hexdown on the simple side of that line.
