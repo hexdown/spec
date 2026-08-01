@@ -21,7 +21,7 @@ Three verbs, and no more:
 - **put**(table, key, value)
 - **scan**(table) → every record, ascending by key bytes
 
-**There is no delete.** Faces are immutable values, the logs are append-only, and revert is an append ([deltas.md](deltas.md)); a store only grows. Discarding one is a substrate operation — removing a directory or a file — not a protocol verb.
+**There is no delete, and there is no overwrite** (ruled 2026-08-01). Faces are immutable values, the logs are append-only, and revert is an append ([deltas.md](deltas.md)); a store only grows, and what has grown never changes. Put refuses to change what a key holds: writing identical bytes again is a quiet no-op — so retries, re-seeding, and a replica writing down what it reads are all harmless — while writing different bytes is an error. Nothing in the model ever needs an overwrite (a revised card is a new face under a new bloom and a new record under a new stamp ring), so a colliding put is always a writer's bug surfacing, never intent. Immutability needs no parsing, which is why it lives below the seam: the store cannot verify what bytes *mean* — bloom-against-content checks belong to the orchard — but it refuses to let bytes *change*. Discarding a store is a substrate operation — removing a directory or a file — not a protocol verb.
 
 Keys are the byte-aligned projections of [data-model.md](data-model.md), chosen so that byte order equals meaning: a scan of a log table is log order, and a document's cards are a contiguous range of ring space. The sorted scan is the protocol's only query primitive — everything richer is an orchard-level projection.
 
