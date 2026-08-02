@@ -14,8 +14,8 @@ four chapters + front matter converted and close-read (2026-07-18). suggested in
 - [x] neem + prop blossoms — in draft; **compounds settled 2026-07-18**: homogeneous compounds ("eaves-dropping", "good-bye", "caw-caw") are single blossoms with beat petals at the joins; span is reserved for kind-mixing compounds ("Jack-in-the-Pulpit", "Mt-Rainier")
 - [x] **dialogue is structural** (2026-07-18) — spoken utterance is carried by a turn stem with quoth attributions (embedded at phrase level or standing at sentence level), distinct from lifting from a source; quote marks and dialogue punctuation are render output derived from structure
 - [x] **elision and possession are distinguished in the schema** (2026-07-18) — separate glyphs; see discussion notes below
-- [ ] interruption dash — "your silly—I mean your brother's, plan"
-- [ ] chapter banner — title stem on the chapter card's banner leaf
+- [x] **interruption dash** (2026-08-01) — the mid-sentence pivot covers it (annotation card 19; renders against the source)
+- [~] chapter banner — the banner schema landed (title / prop / quant); the "Chapter N. " render convention is phase 3's remaining renderer item
 - [x] **normalization policy** (2026-07-18) — chapter-opener caps ("NEITHER of the children...") normalize at ingest; author-voice hyphenation ("to-day", "fish-worm") is content and preserved; where the source prints comma-after-tag followed by a capitalized continuation, the comma is honored as structure (embedded quoth) and only the capital normalizes — capitalization is derived, never stored (see speech-examples exhibit d)
 
 ### chapter 2 — adds prosody
@@ -24,7 +24,7 @@ four chapters + front matter converted and close-read (2026-07-18). suggested in
 - [ ] verse + line stems — feather flop's quatrain; line breaks distinct from paragraph breaks
 - [ ] aside stem — parenthetical stage direction: "(counting them off)"
 - [ ] colon-introduced turns — "and called again and again as loudly as she dared:" followed by displayed shouts, each its own paragraph
-- [x] diminuendo echo → **fade** (2026-07-18) — joined the emphasis set as its quiet end; ch4-annotation card 21 uses it provisionally and the source now round-trips verbatim; structural mechanism (wrapper vs variant) settles with stress/shout in the ch2 prosody session
+- [x] diminuendo echo → **fade** (2026-07-18) — joined the emphasis set as its quiet end; ch4-annotation card 21 uses it provisionally and the source now round-trips verbatim; structural mechanism (wrapper vs variant) settles with stress/shout in the ch2 prosody session — and the settlement should write the **derivation narrative**: why the emphasis node wraps the sentence (or doesn't), at which grains emphasis may attach (utterance? phrase? word?), and how the complete ordering fade < plain < stress < shout carries its reasoning (philetus, 2026-08-01)
 
 ### chapter 47 — adds embedded lectures
 
